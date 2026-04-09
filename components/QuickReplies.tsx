@@ -1,10 +1,11 @@
 interface Props {
   replies: string[];
   onSelect: (reply: string) => void;
+  onReset?: () => void;
   disabled: boolean;
 }
 
-export default function QuickReplies({ replies, onSelect, disabled }: Props) {
+export default function QuickReplies({ replies, onSelect, onReset, disabled }: Props) {
   if (replies.length === 0) return null;
 
   return (
@@ -21,6 +22,17 @@ export default function QuickReplies({ replies, onSelect, disabled }: Props) {
           {reply}
         </button>
       ))}
+      {onReset && (
+        <button
+          onClick={onReset}
+          disabled={disabled}
+          className="px-3 py-1.5 rounded-full border border-gray-300 text-gray-400 text-sm font-medium
+                     hover:border-gray-400 hover:text-gray-600 transition-colors duration-150
+                     disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          ← All options
+        </button>
+      )}
     </div>
   );
 }

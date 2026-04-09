@@ -179,6 +179,11 @@ export default function ChatWindow() {
         <QuickReplies
           replies={quickReplies}
           onSelect={handleSend}
+          onReset={
+            quickReplies !== INITIAL_QUICK_REPLIES && quickReplies.length > 0
+              ? () => setQuickReplies(INITIAL_QUICK_REPLIES)
+              : undefined
+          }
           disabled={isLoading}
         />
 
@@ -187,7 +192,7 @@ export default function ChatWindow() {
           <div className="flex-1 flex items-center bg-[#F0F2F5] rounded-full px-4 ring-0 focus-within:ring-2 focus-within:ring-[#0084FF]/30 transition">
             <input
               ref={inputRef}
-              type="text"
+              type="search"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
