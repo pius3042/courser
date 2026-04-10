@@ -39,8 +39,9 @@ function renderText(text: string) {
 function HoursCard({ rows }: { rows: HoursRow[] }) {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden w-full mt-1">
-      <div className="bg-[#0084FF] px-4 py-3 flex items-center gap-2">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 overflow-hidden w-full mt-1">
+      <div className="px-4 py-3 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}>
         <span className="text-lg">🕐</span>
         <p className="text-white font-semibold text-sm">Opening Hours</p>
       </div>
@@ -50,36 +51,20 @@ function HoursCard({ rows }: { rows: HoursRow[] }) {
           return (
             <div
               key={row.day}
-              className={`flex items-center justify-between px-4 py-2.5 ${
-                isToday ? "bg-blue-50" : ""
-              }`}
+              className={`flex items-center justify-between px-4 py-2.5 ${isToday ? "bg-violet-50" : ""}`}
             >
               <div className="flex items-center gap-2">
-                <span
-                  className={`w-2 h-2 rounded-full shrink-0 ${
-                    row.open ? "bg-green-400" : "bg-red-400"
-                  }`}
-                />
-                <span
-                  className={`text-sm ${
-                    isToday
-                      ? "font-bold text-[#0084FF]"
-                      : "font-medium text-gray-700"
-                  }`}
-                >
+                <span className={`w-2 h-2 rounded-full shrink-0 ${row.open ? "bg-green-400" : "bg-red-400"}`} />
+                <span className={`text-sm ${isToday ? "font-bold text-violet-600" : "font-medium text-gray-700"}`}>
                   {row.day}
                   {isToday && (
-                    <span className="ml-1.5 text-[10px] font-semibold bg-[#0084FF] text-white px-1.5 py-0.5 rounded-full">
+                    <span className="ml-1.5 text-[10px] font-semibold bg-violet-600 text-white px-1.5 py-0.5 rounded-full">
                       Today
                     </span>
                   )}
                 </span>
               </div>
-              <span
-                className={`text-xs font-medium ${
-                  row.open ? "text-gray-600" : "text-red-500"
-                }`}
-              >
+              <span className={`text-xs font-medium ${row.open ? "text-gray-600" : "text-red-500"}`}>
                 {row.hours}
               </span>
             </div>
@@ -90,17 +75,10 @@ function HoursCard({ rows }: { rows: HoursRow[] }) {
   );
 }
 
-function LocationCard({
-  address,
-  landmark,
-}: {
-  address: string;
-  landmark?: string;
-}) {
+function LocationCard({ address, landmark }: { address: string; landmark?: string }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden w-full mt-1">
-      {/* Map placeholder */}
-      <div className="bg-linear-to-br from-green-50 to-emerald-100 h-24 flex items-center justify-center relative">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 overflow-hidden w-full mt-1">
+      <div className="bg-linear-to-br from-violet-50 to-purple-100 h-24 flex items-center justify-center">
         <div className="text-5xl">🗺️</div>
       </div>
       <div className="px-4 py-3 space-y-1">
@@ -108,14 +86,13 @@ function LocationCard({
           <span className="shrink-0 mt-0.5">📍</span>
           {address}
         </p>
-        {landmark && (
-          <p className="text-xs text-gray-400 pl-5">{landmark}</p>
-        )}
+        {landmark && <p className="text-xs text-gray-400 pl-5">{landmark}</p>}
         <a
           href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex items-center justify-center gap-1.5 w-full bg-[#0084FF] text-white text-xs font-semibold py-2 rounded-xl hover:bg-blue-600 active:scale-95 transition-all"
+          className="mt-2 flex items-center justify-center gap-1.5 w-full text-white text-xs font-semibold py-2 rounded-xl active:scale-95 transition-all"
+          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)' }}
         >
           Get Directions →
         </a>
@@ -124,32 +101,26 @@ function LocationCard({
   );
 }
 
-function ContactCard({
-  phone,
-  hours,
-  address,
-}: {
-  phone: string;
-  hours: string;
-  address: string;
-}) {
+function ContactCard({ phone, hours, address }: { phone: string; hours: string; address: string }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden w-full mt-1">
-      <div className="bg-[#0084FF] px-4 py-3 flex items-center gap-2">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 overflow-hidden w-full mt-1">
+      <div className="px-4 py-3 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}>
         <span className="text-lg">📞</span>
         <p className="text-white font-semibold text-sm">Contact Us</p>
       </div>
       <div className="px-4 py-3 space-y-3">
         <a
           href={`tel:${phone}`}
-          className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors"
+          className="flex items-center gap-3 p-3 bg-violet-50 rounded-xl hover:bg-violet-100 transition-colors"
         >
-          <div className="w-9 h-9 rounded-full bg-[#0084FF] flex items-center justify-center text-white text-base shrink-0">
+          <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-base shrink-0"
+            style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)' }}>
             📲
           </div>
           <div>
             <p className="text-[11px] text-gray-400 font-medium">Call us</p>
-            <p className="text-sm font-bold text-[#0084FF]">{phone}</p>
+            <p className="text-sm font-bold text-violet-600">{phone}</p>
           </div>
         </a>
         <div className="flex items-start gap-3 px-1">
@@ -171,25 +142,16 @@ function ContactCard({
   );
 }
 
-function DeliveryCard({
-  area,
-  minOrder,
-  fee,
-  phone,
-}: {
-  area: string;
-  minOrder: string;
-  fee: string;
-  phone: string;
-}) {
+function DeliveryCard({ area, minOrder, fee, phone }: { area: string; minOrder: string; fee: string; phone: string }) {
   const rows = [
     { label: "Delivery Area", value: area, icon: "📍" },
     { label: "Minimum Order", value: minOrder, icon: "🛒" },
     { label: "Delivery Fee", value: fee, icon: "💳" },
   ];
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden w-full mt-1">
-      <div className="bg-[#0084FF] px-4 py-3 flex items-center gap-2">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 overflow-hidden w-full mt-1">
+      <div className="px-4 py-3 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}>
         <span className="text-lg">🚚</span>
         <p className="text-white font-semibold text-sm">Delivery Info</p>
       </div>
@@ -200,18 +162,15 @@ function DeliveryCard({
               <span className="text-base">{row.icon}</span>
               <span className="text-xs text-gray-500">{row.label}</span>
             </div>
-            <span className="text-xs font-semibold text-gray-800">
-              {row.value}
-            </span>
+            <span className="text-xs font-semibold text-gray-800">{row.value}</span>
           </div>
         ))}
         <div className="border-t border-gray-100 pt-2.5 mt-1">
-          <p className="text-[11px] text-gray-400 mb-2">
-            To arrange delivery, call us during business hours:
-          </p>
+          <p className="text-[11px] text-gray-400 mb-2">Call us to arrange delivery during business hours:</p>
           <a
             href={`tel:${phone}`}
-            className="flex items-center justify-center gap-1.5 w-full bg-[#0084FF] text-white text-xs font-semibold py-2 rounded-xl hover:bg-blue-600 active:scale-95 transition-all"
+            className="flex items-center justify-center gap-1.5 w-full text-white text-xs font-semibold py-2 rounded-xl active:scale-95 transition-all"
+            style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)' }}
           >
             📞 Call {phone}
           </a>
@@ -223,24 +182,24 @@ function DeliveryCard({
 
 function OrderCard({ phone, cakeNote }: { phone: string; cakeNote: string }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden w-full mt-1">
-      <div className="bg-[#0084FF] px-4 py-3 flex items-center gap-2">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 overflow-hidden w-full mt-1">
+      <div className="px-4 py-3 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}>
         <span className="text-lg">🛍️</span>
         <p className="text-white font-semibold text-sm">Place an Order</p>
       </div>
       <div className="px-4 py-3 space-y-3">
-        <p className="text-xs text-gray-500">
-          Call us during business hours (Mon–Sat, 8AM–7PM) to place your order:
-        </p>
+        <p className="text-xs text-gray-500">Call us during business hours (Mon–Sat, 8AM–7PM) to place your order:</p>
         <a
           href={`tel:${phone}`}
-          className="flex items-center justify-center gap-1.5 w-full bg-[#0084FF] text-white text-sm font-bold py-3 rounded-xl hover:bg-blue-600 active:scale-95 transition-all"
+          className="flex items-center justify-center gap-1.5 w-full text-white text-sm font-bold py-3 rounded-xl active:scale-95 transition-all"
+          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)', boxShadow: '0 4px 14px rgba(124,58,237,0.3)' }}
         >
           📞 {phone}
         </a>
-        <div className="flex items-start gap-2 bg-yellow-50 border border-yellow-100 rounded-xl px-3 py-2.5">
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2.5">
           <span className="text-base shrink-0">🎂</span>
-          <p className="text-xs text-yellow-800">{cakeNote}</p>
+          <p className="text-xs text-amber-800">{cakeNote}</p>
         </div>
       </div>
     </div>
@@ -249,29 +208,11 @@ function OrderCard({ phone, cakeNote }: { phone: string; cakeNote: string }) {
 
 function RichCardRenderer({ card }: { card: RichCard }) {
   switch (card.type) {
-    case "hours":
-      return <HoursCard rows={card.rows} />;
-    case "location":
-      return <LocationCard address={card.address} landmark={card.landmark} />;
-    case "contact":
-      return (
-        <ContactCard
-          phone={card.phone}
-          hours={card.hours}
-          address={card.address}
-        />
-      );
-    case "delivery":
-      return (
-        <DeliveryCard
-          area={card.area}
-          minOrder={card.minOrder}
-          fee={card.fee}
-          phone={card.phone}
-        />
-      );
-    case "order":
-      return <OrderCard phone={card.phone} cakeNote={card.cakeNote} />;
+    case "hours":    return <HoursCard rows={card.rows} />;
+    case "location": return <LocationCard address={card.address} landmark={card.landmark} />;
+    case "contact":  return <ContactCard phone={card.phone} hours={card.hours} address={card.address} />;
+    case "delivery": return <DeliveryCard area={card.area} minOrder={card.minOrder} fee={card.fee} phone={card.phone} />;
+    case "order":    return <OrderCard phone={card.phone} cakeNote={card.cakeNote} />;
   }
 }
 
@@ -281,35 +222,32 @@ export default function MessageBubble({ message }: Props) {
   const isUser = message.role === "user";
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   return (
-    <div
-      className={`flex items-end gap-2 px-4 py-1 message-fade-in ${
-        isUser ? "flex-row-reverse" : "flex-row"
-      }`}
-    >
+    <div className={`flex items-end gap-2 px-4 py-1 message-fade-in ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       {/* Bot avatar */}
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-[#0084FF] flex items-center justify-center shrink-0 text-white text-xs shadow-sm self-start mt-1">
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-white text-xs shadow-md self-start mt-1"
+          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c3aed)' }}
+        >
           🎂
         </div>
       )}
 
-      <div
-        className={`flex flex-col gap-1 max-w-[85%] ${
-          isUser ? "items-end" : "items-start"
-        }`}
-      >
+      <div className={`flex flex-col gap-1 max-w-[85%] ${isUser ? "items-end" : "items-start"}`}>
         {/* Text bubble */}
         <div
           className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
             isUser
-              ? "bg-[#0084FF] text-white rounded-br-sm"
-              : "bg-[#E4E6EB] text-gray-800 rounded-bl-sm"
+              ? "text-white rounded-br-sm"
+              : "rounded-bl-sm"
           }`}
+          style={isUser
+            ? { background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)', boxShadow: '0 4px 14px rgba(124,58,237,0.25)' }
+            : { background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.6)', color: '#374151' }
+          }
         >
           {renderText(message.content)}
         </div>
@@ -322,25 +260,22 @@ export default function MessageBubble({ message }: Props) {
           <div className="w-full space-y-3 mt-1">
             {message.menuSections.map((section) => (
               <div key={section.title}>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-1">
+                <p className="text-xs font-semibold text-violet-400 uppercase tracking-wide mb-2 px-1">
                   {section.title}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {section.items.map((item) => (
                     <div
                       key={item.name}
-                      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col"
+                      className="rounded-xl shadow-sm overflow-hidden flex flex-col"
+                      style={{ background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.6)' }}
                     >
-                      <div className="bg-linear-to-br from-orange-50 to-yellow-50 h-16 flex items-center justify-center text-4xl">
+                      <div className="bg-linear-to-br from-violet-50 to-purple-50 h-16 flex items-center justify-center text-4xl">
                         {item.emoji}
                       </div>
                       <div className="px-2.5 py-2">
-                        <p className="text-xs font-medium text-gray-800 leading-tight">
-                          {item.name}
-                        </p>
-                        <p className="text-xs font-bold text-[#0084FF] mt-0.5">
-                          {item.price}
-                        </p>
+                        <p className="text-xs font-medium text-gray-800 leading-tight">{item.name}</p>
+                        <p className="text-xs font-bold text-violet-600 mt-0.5">{item.price}</p>
                       </div>
                     </div>
                   ))}
@@ -351,7 +286,7 @@ export default function MessageBubble({ message }: Props) {
         )}
 
         {/* Timestamp */}
-        <span className="text-[11px] text-gray-400 px-1">
+        <span className="text-[11px] text-violet-300 px-1">
           {mounted ? formatTime(message.timestamp) : ""}
         </span>
       </div>
