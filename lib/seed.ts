@@ -1,0 +1,133 @@
+import dbConnect from './db';
+import Student from '@/models/Student';
+import Course from '@/models/Course';
+import Admin from '@/models/Admin';
+import bcrypt from 'bcryptjs';
+
+export async function seedDatabase() {
+  await dbConnect();
+
+  await Student.deleteMany({});
+  await Course.deleteMany({});
+  await Admin.deleteMany({});
+
+  // Admin
+  const hashedAdminPassword = await bcrypt.hash('admin123', 10);
+  await Admin.create({
+    name: 'System Administrator',
+    email: 'admin@uniport.edu.ng',
+    password: hashedAdminPassword,
+    role: 'super-admin',
+  });
+
+  // Students
+  const hashedStudentPassword = await bcrypt.hash('student123', 10);
+  await Student.insertMany([
+    {
+      name: 'John Doe',
+      matricNumber: '2020/123456',
+      email: 'john.doe@uniport.edu.ng',
+      password: hashedStudentPassword,
+      department: 'Computer Science',
+      level: 400,
+      semester: 1,
+      completedCourses: [
+        'CSC101','CSC102','CSC103','MTH101','PHY101','GSS101','EMA101',
+        'CSC191','CSC192','MTH191','MTH192','CSC193','PHY191','STA101',
+        'CSC281','CSC282','CSC283','CSC284','STA201','MTH201','GSS201',
+        'CSC291','CSC292','MTH291','CSC293','MTH292','CSC294',
+        'CSC381','CSC382','CSC383','CSC384','GES301','CSC385','CSC386',
+        'CSC391','CSC392','CSC393','CSC394','CSC395',
+      ],
+    },
+    {
+      name: 'Jane Smith',
+      matricNumber: '2020/123457',
+      email: 'jane.smith@uniport.edu.ng',
+      password: hashedStudentPassword,
+      department: 'Computer Science',
+      level: 300,
+      semester: 1,
+      completedCourses: [
+        'CSC101','CSC102','CSC103','MTH101','PHY101','GSS101','CHM101',
+        'CSC191','CSC192','MTH191','MTH192','CSC193','PHY191','STA101',
+      ],
+    },
+  ]);
+
+  const courses = [
+    // ─── YEAR 1 — FIRST SEMESTER ───────────────────────────────────────────
+    { code: 'GSS101', title: 'Communication Skills in English', units: 2, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC101', title: 'Introduction to Computer Science', units: 3, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC102', title: 'Basic Programming', units: 3, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'MTH101', title: 'Mechanics and Properties of Matter', units: 3, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'PHY101', title: 'Introduction to Philosophy & Logic', units: 2, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC103', title: 'Calculus', units: 3, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CHM101', title: 'General Chemistry', units: 2, department: 'Computer Science', level: 100, semester: 1, compulsory: true, prerequisites: [] },
+
+    // ─── YEAR 1 — SECOND SEMESTER ──────────────────────────────────────────
+    { code: 'CSC191', title: 'Computer Appreciation & Application', units: 3, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['CSC101'] },
+    { code: 'CSC192', title: 'Database Programming', units: 3, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['CSC102'] },
+    { code: 'MTH191', title: 'Introduction to Set, Logic & Numbers', units: 3, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['MTH101'] },
+    { code: 'MTH192', title: 'Calculus II', units: 3, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['MTH101'] },
+    { code: 'CSC193', title: 'Object Oriented Programming', units: 3, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['CSC102'] },
+    { code: 'PHY191', title: 'Electricity & Magnetism', units: 2, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: ['PHY101'] },
+    { code: 'STA101', title: 'Language Statistics', units: 2, department: 'Computer Science', level: 100, semester: 2, compulsory: true, prerequisites: [] },
+
+    // ─── YEAR 2 — FIRST SEMESTER ───────────────────────────────────────────
+    { code: 'STA201', title: 'Introduction to Probability & Statistics', units: 3, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['STA101'] },
+    { code: 'CSC281', title: 'Computer System Fundamentals', units: 3, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['CSC191'] },
+    { code: 'CSC282', title: 'Introduction to Information Systems', units: 2, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['CSC191'] },
+    { code: 'CSC283', title: 'Computer System Architecture', units: 3, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['CSC191'] },
+    { code: 'CSC284', title: 'Structured Programming', units: 3, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['CSC193'] },
+    { code: 'MTH201', title: 'Linear Algebra', units: 3, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: ['MTH192'] },
+    { code: 'GSS201', title: 'Community Service', units: 1, department: 'Computer Science', level: 200, semester: 1, compulsory: true, prerequisites: [] },
+
+    // ─── YEAR 2 — SECOND SEMESTER ──────────────────────────────────────────
+    { code: 'CSC291', title: 'Database Management Systems', units: 3, department: 'Computer Science', level: 200, semester: 2, compulsory: true, prerequisites: ['CSC192'] },
+    { code: 'CSC292', title: 'Object Oriented Programming II', units: 3, department: 'Computer Science', level: 200, semester: 2, compulsory: true, prerequisites: ['CSC193'] },
+    { code: 'MTH291', title: 'Introduction to Set, Logic & Numbers II', units: 3, department: 'Computer Science', level: 200, semester: 2, compulsory: true, prerequisites: ['MTH191'] },
+    { code: 'CSC293', title: 'Formal Language & Computability', units: 3, department: 'Computer Science', level: 200, semester: 2, compulsory: true, prerequisites: ['CSC284'] },
+    { code: 'MTH292', title: 'Modern Algebra', units: 3, department: 'Computer Science', level: 200, semester: 2, compulsory: true, prerequisites: ['MTH201'] },
+    { code: 'CSC294', title: 'Web Technologies', units: 2, department: 'Computer Science', level: 200, semester: 2, compulsory: false, prerequisites: ['CSC192'] },
+
+    // ─── YEAR 3 — FIRST SEMESTER ───────────────────────────────────────────
+    { code: 'CSC381', title: 'Fundamentals of Entrepreneurship', units: 2, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC382', title: 'Computer Architecture & Engineering', units: 3, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: ['CSC283'] },
+    { code: 'CSC383', title: 'Operating Systems', units: 3, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: ['CSC283'] },
+    { code: 'CSC384', title: 'Formal Language, Computability & Discrete Maths', units: 3, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: ['CSC293'] },
+    { code: 'GES301', title: 'Entrepreneurship Studies', units: 2, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC385', title: 'Software Engineering I', units: 3, department: 'Computer Science', level: 300, semester: 1, compulsory: true, prerequisites: ['CSC292'] },
+    { code: 'CSC386', title: 'Numerical Methods', units: 3, department: 'Computer Science', level: 300, semester: 1, compulsory: false, prerequisites: ['MTH201'] },
+
+    // ─── YEAR 3 — SECOND SEMESTER ──────────────────────────────────────────
+    { code: 'CSC391', title: 'Industrial Training', units: 6, department: 'Computer Science', level: 300, semester: 2, compulsory: true, prerequisites: [] },
+    { code: 'CSC392', title: 'Systems Analysis and Design', units: 3, department: 'Computer Science', level: 300, semester: 2, compulsory: true, prerequisites: ['CSC291'] },
+    { code: 'CSC393', title: 'Computer Networks', units: 3, department: 'Computer Science', level: 300, semester: 2, compulsory: true, prerequisites: ['CSC382'] },
+    { code: 'CSC394', title: 'Compiler Construction', units: 3, department: 'Computer Science', level: 300, semester: 2, compulsory: false, prerequisites: ['CSC384'] },
+    { code: 'CSC395', title: 'Human Computer Interaction', units: 2, department: 'Computer Science', level: 300, semester: 2, compulsory: false, prerequisites: [] },
+
+    // ─── YEAR 4 — FIRST SEMESTER ───────────────────────────────────────────
+    { code: 'CSC401', title: 'Object Oriented Programming III', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: ['CSC292'] },
+    { code: 'CSC402', title: 'Systems Analysis and Design II', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: ['CSC392'] },
+    { code: 'CSC403', title: 'Computer Organisation', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: ['CSC382'] },
+    { code: 'CSC404', title: 'Artificial Intelligence', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: ['CSC384'] },
+    { code: 'CSC405', title: 'Computer Networks and Data Communication', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: ['CSC393'] },
+    { code: 'CSC406', title: 'Research Methodology and Technical Writing', units: 2, department: 'Computer Science', level: 400, semester: 1, compulsory: true, prerequisites: [] },
+    { code: 'CSC407', title: 'Machine Learning', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: false, prerequisites: ['CSC404'] },
+    { code: 'CSC408', title: 'Mobile Application Development', units: 3, department: 'Computer Science', level: 400, semester: 1, compulsory: false, prerequisites: ['CSC292'] },
+
+    // ─── YEAR 4 — SECOND SEMESTER ──────────────────────────────────────────
+    { code: 'CSC491', title: 'Project', units: 6, department: 'Computer Science', level: 400, semester: 2, compulsory: true, prerequisites: [] },
+    { code: 'CSC492', title: 'Computer Graphics and Simulation', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: true, prerequisites: ['CSC403'] },
+    { code: 'CSC493', title: 'Internet and Web Programming', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: true, prerequisites: ['CSC294'] },
+    { code: 'CSC494', title: 'Database Management and Administration', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: true, prerequisites: ['CSC291'] },
+    { code: 'CSC495', title: 'Computer Maintenance and Building Circuits', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: true, prerequisites: ['CSC403'] },
+    { code: 'CSC496', title: 'Cybersecurity', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: false, prerequisites: ['CSC405'] },
+    { code: 'CSC497', title: 'Cloud Computing', units: 3, department: 'Computer Science', level: 400, semester: 2, compulsory: false, prerequisites: ['CSC405'] },
+  ];
+
+  await Course.insertMany(courses);
+
+  console.log('Database seeded successfully!');
+}

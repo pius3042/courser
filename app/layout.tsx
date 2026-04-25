@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/components/ui/toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Sweet Delights Bakery — AI Support",
-  description: "Customer support chatbot for Sweet Delights Bakery, Rivers.",
+  title: "Smart Course Registration Portal - University of Port Harcourt",
+  description: "Intelligent course registration system for UNIPORT students",
 };
 
 export default function RootLayout({
@@ -23,11 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-      <body>{children}</body>
+    <html lang="en" className="antialiased">
+      <body className={inter.className}>
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   );
 }

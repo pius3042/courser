@@ -1,40 +1,61 @@
-export interface MenuItem {
+export interface Student {
+  _id: string;
   name: string;
-  price: string;
-  emoji: string;
+  matricNumber: string;
+  email: string;
+  department: string;
+  level: number;
+  semester: number;
+  completedCourses: string[];
+  createdAt: Date;
 }
 
-export interface MenuSection {
+export interface Course {
+  _id: string;
+  code: string;
   title: string;
-  items: MenuItem[];
+  units: number;
+  department: string;
+  level: number;
+  semester: number;
+  compulsory: boolean;
+  prerequisites: string[];
+  createdAt: Date;
 }
 
-export interface HoursRow {
-  day: string;
-  hours: string;
-  open: boolean;
+export interface Registration {
+  _id: string;
+  studentId: string | Student;
+  session: string;
+  semester: number;
+  courses: string[];
+  totalUnits: number;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: Date;
 }
 
-export type RichCard =
-  | { type: 'hours'; rows: HoursRow[] }
-  | { type: 'location'; address: string; landmark?: string }
-  | { type: 'contact'; phone: string; hours: string; address: string }
-  | { type: 'delivery'; area: string; minOrder: string; fee: string; phone: string }
-  | { type: 'order'; phone: string; cakeNote: string };
-
-export interface Message {
-  id: string;
-  role: 'user' | 'bot';
-  content: string;
-  timestamp: Date;
-  menuSections?: MenuSection[];
-  richCard?: RichCard;
+export interface Admin {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'super-admin';
+  createdAt: Date;
 }
 
-export interface PredefinedEntry {
-  trigger: string;
-  response: string;
-  followUps: string[];
-  menuSections?: MenuSection[];
-  richCard?: RichCard;
+export interface ValidationWarning {
+  type: 'error' | 'warning' | 'info' | 'success';
+  title: string;
+  message: string;
+  courses?: string[];
+}
+
+export interface DashboardStats {
+  totalStudents?: number;
+  totalCourses?: number;
+  pendingRegistrations?: number;
+  approvedRegistrations?: number;
+  totalRegistrations?: number;
+  currentUnits?: number;
+  maxUnits?: number;
+  completedCourses?: number;
 }
