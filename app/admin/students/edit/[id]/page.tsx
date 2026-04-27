@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem } from "@/components/ui/select";
 import { ArrowLeft, Save, User } from "lucide-react";
@@ -32,14 +31,11 @@ export default function EditStudentPage() {
   useEffect(() => {
     if (!id) return;
     fetch(`/api/students/${id}`)
-      .then((res) => {
-        if (!res.ok) {
-          router.push("/admin/students");
-          return null;
-        }
+      .then(res => {
+        if (!res.ok) { router.push("/admin/students"); return null; }
         return res.json();
       })
-      .then((data) => {
+      .then(data => {
         if (!data) return;
         const s = data.student;
         setFormData({
@@ -85,95 +81,60 @@ export default function EditStudentPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full"
-        />
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="mb-8">
           <Link href="/admin/students">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Students
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Students
+            </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mb-2">Edit Student</h1>
-          <p className="text-gray-600">Update student information</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Edit Student</h1>
+          <p className="text-white/40">Update student information</p>
         </div>
 
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-6 h-6" /> Student Details
+            <CardTitle className="flex items-center gap-2 text-white">
+              <User className="w-6 h-6 text-blue-400" /> Student Details
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Full Name
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    placeholder="e.g., John Doe"
-                    required
-                  />
+                  <label className="block text-sm font-medium text-white/70 mb-2">Full Name</label>
+                  <Input value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="e.g., John Doe" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Matric Number
-                  </label>
-                  <Input
-                    value={formData.matricNumber}
-                    onChange={(e) =>
-                      setFormData({ ...formData, matricNumber: e.target.value })
-                    }
-                    placeholder="e.g., u2022/5570025"
-                    required
-                  />
+                  <label className="block text-sm font-medium text-white/70 mb-2">Matric Number</label>
+                  <Input value={formData.matricNumber} onChange={e => setFormData({ ...formData, matricNumber: e.target.value })} placeholder="e.g., u2022/5570025" required />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Email Address
-                </label>
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="e.g., john@uniport.edu.ng"
-                  required
-                />
+                <label className="block text-sm font-medium text-white/70 mb-2">Email Address</label>
+                <Input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="e.g., john@uniport.edu.ng" required />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Department
-                  </label>
-                  <Select
-                    value={formData.department}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, department: v })
-                    }
-                    placeholder="Select Department"
-                  >
-                    <SelectItem value="Computer Science">
-                      Computer Science
-                    </SelectItem>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Department</label>
+                  <Select value={formData.department} onValueChange={v => setFormData({ ...formData, department: v })} placeholder="Select Department">
+                    <SelectItem value="Computer Science">Computer Science</SelectItem>
                     <SelectItem value="Mathematics">Mathematics</SelectItem>
                     <SelectItem value="Physics">Physics</SelectItem>
                     <SelectItem value="Chemistry">Chemistry</SelectItem>
@@ -181,15 +142,8 @@ export default function EditStudentPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Level
-                  </label>
-                  <Select
-                    value={formData.level}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, level: v })
-                    }
-                  >
+                  <label className="block text-sm font-medium text-white/70 mb-2">Level</label>
+                  <Select value={formData.level} onValueChange={v => setFormData({ ...formData, level: v })}>
                     <SelectItem value="100">100 Level</SelectItem>
                     <SelectItem value="200">200 Level</SelectItem>
                     <SelectItem value="300">300 Level</SelectItem>
@@ -197,15 +151,8 @@ export default function EditStudentPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Semester
-                  </label>
-                  <Select
-                    value={formData.semester}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, semester: v })
-                    }
-                  >
+                  <label className="block text-sm font-medium text-white/70 mb-2">Semester</label>
+                  <Select value={formData.semester} onValueChange={v => setFormData({ ...formData, semester: v })}>
                     <SelectItem value="1">First Semester</SelectItem>
                     <SelectItem value="2">Second Semester</SelectItem>
                   </Select>
@@ -213,31 +160,23 @@ export default function EditStudentPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  New Password{" "}
-                  <span className="text-gray-400 font-normal">
-                    (leave blank to keep current)
-                  </span>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  New Password <span className="text-white/30 font-normal">(leave blank to keep current)</span>
                 </label>
-                <Input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  placeholder="Enter new password or leave blank"
-                />
+                <Input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="Enter new password or leave blank" />
               </div>
 
-              <div className="flex gap-4 pt-6 border-t">
-                <Button type="submit" disabled={saving} className="flex-1">
-                  <Save className="w-4 h-4 mr-2" />
+              <div className="flex gap-4 pt-6 border-t border-white/10">
+                <motion.button type="submit" disabled={saving} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white disabled:opacity-50">
+                  <Save className="w-4 h-4" />
                   {saving ? "Saving..." : "Save Changes"}
-                </Button>
+                </motion.button>
                 <Link href="/admin/students" className="flex-1">
-                  <Button type="button" variant="outline" className="w-full">
+                  <motion.button type="button" whileHover={{ scale: 1.02 }}
+                    className="w-full py-3 rounded-xl font-semibold border border-white/10 text-white/60 hover:text-white transition-colors">
                     Cancel
-                  </Button>
+                  </motion.button>
                 </Link>
               </div>
             </form>

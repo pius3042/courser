@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectItem } from '@/components/ui/select';
 import { useToast } from '@/components/ui/toast';
-import { ArrowLeft, Settings, Save, School, Calendar, Shield, BookOpen, Database, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Save, School, Calendar, Database } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SettingsPage() {
@@ -103,56 +102,63 @@ export default function SettingsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-6xl mx-auto">
+      {/* Background orbs */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-0 -left-40 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="mb-8">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mb-2">System Settings</h1>
-          <p className="text-gray-600">Configure system-wide settings and preferences</p>
+          <h1 className="text-4xl font-bold text-white mb-2">System Settings</h1>
+          <p className="text-white/40">Configure system-wide settings and preferences</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* University / Academic Period */}
+          {/* Academic Period */}
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <School className="w-6 h-6 text-blue-600" /> Academic Period
+              <CardTitle className="flex items-center gap-2 text-white">
+                <School className="w-6 h-6 text-blue-400" /> Academic Period
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Current Session</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Current Session</label>
                 <Input
                   value={settings.currentSession}
                   onChange={e => setSettings({ ...settings, currentSession: e.target.value })}
                   placeholder="e.g., 2025/2026"
                 />
                 {sessionChanged && (
-                  <p className="text-xs text-orange-600 mt-1">⚠️ Changing session will bump all student levels</p>
+                  <p className="text-xs text-orange-400 mt-1">⚠️ Changing session will bump all student levels</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Current Semester</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Current Semester</label>
                 <Select value={settings.currentSemester} onValueChange={v => setSettings({ ...settings, currentSemester: v })}>
                   <SelectItem value="1">First Semester</SelectItem>
                   <SelectItem value="2">Second Semester</SelectItem>
                 </Select>
                 {semesterChanged && (
-                  <p className="text-xs text-orange-600 mt-1">⚠️ Changing semester will update all students</p>
+                  <p className="text-xs text-orange-400 mt-1">⚠️ Changing semester will update all students</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Max Units Per Semester</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Max Units Per Semester</label>
                 <Input
                   type="number"
                   value={settings.maxUnitsPerSemester}
@@ -165,31 +171,23 @@ export default function SettingsPage() {
           {/* Registration Settings */}
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-6 h-6 text-green-600" /> Registration Settings
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Calendar className="w-6 h-6 text-emerald-400" /> Registration Settings
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Checkbox id="regOpen" checked={settings.registrationOpen}
-                  onCheckedChange={v => setSettings({ ...settings, registrationOpen: v as boolean })} />
-                <label htmlFor="regOpen" className="text-sm font-medium">Registration is currently open</label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="lateReg" checked={settings.allowLateRegistration}
-                  onCheckedChange={v => setSettings({ ...settings, allowLateRegistration: v as boolean })} />
-                <label htmlFor="lateReg" className="text-sm font-medium">Allow late registration</label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="autoApprove" checked={settings.autoApproveRegistrations}
-                  onCheckedChange={v => setSettings({ ...settings, autoApproveRegistrations: v as boolean })} />
-                <label htmlFor="autoApprove" className="text-sm font-medium">Auto-approve registrations</label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox id="prereq" checked={settings.requirePrerequisiteCheck}
-                  onCheckedChange={v => setSettings({ ...settings, requirePrerequisiteCheck: v as boolean })} />
-                <label htmlFor="prereq" className="text-sm font-medium">Enforce prerequisite checking</label>
-              </div>
+              {[
+                { id: 'regOpen', label: 'Registration is currently open', key: 'registrationOpen' },
+                { id: 'lateReg', label: 'Allow late registration', key: 'allowLateRegistration' },
+                { id: 'autoApprove', label: 'Auto-approve registrations', key: 'autoApproveRegistrations' },
+                { id: 'prereq', label: 'Enforce prerequisite checking', key: 'requirePrerequisiteCheck' },
+              ].map(item => (
+                <div key={item.id} className="flex items-center gap-2">
+                  <Checkbox id={item.id} checked={(settings as any)[item.key]}
+                    onCheckedChange={v => setSettings({ ...settings, [item.key]: v as boolean })} />
+                  <label htmlFor={item.id} className="text-sm font-medium text-white/80">{item.label}</label>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -197,8 +195,8 @@ export default function SettingsPage() {
         {/* System Status */}
         <Card className="glass-effect mt-6">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="w-6 h-6 text-indigo-600" /> System Status
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Database className="w-6 h-6 text-indigo-400" /> System Status
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -208,10 +206,10 @@ export default function SettingsPage() {
                 { label: 'Registration', status: settings.registrationOpen ? 'Open' : 'Closed', ok: settings.registrationOpen },
                 { label: 'Late Registration', status: settings.allowLateRegistration ? 'Enabled' : 'Disabled', ok: settings.allowLateRegistration },
               ].map(item => (
-                <div key={item.label} className={`text-center p-4 rounded-lg ${item.ok ? 'bg-green-50' : 'bg-gray-50'}`}>
-                  <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${item.ok ? 'bg-green-500' : 'bg-gray-400'}`} />
-                  <p className="text-sm font-medium">{item.label}</p>
-                  <p className="text-xs text-gray-600">{item.status}</p>
+                <div key={item.label} className={`text-center p-4 rounded-xl border ${item.ok ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-white/5 border-white/10'}`}>
+                  <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${item.ok ? 'bg-emerald-400' : 'bg-white/20'}`} />
+                  <p className="text-sm font-medium text-white">{item.label}</p>
+                  <p className={`text-xs ${item.ok ? 'text-emerald-400' : 'text-white/30'}`}>{item.status}</p>
                 </div>
               ))}
             </div>
@@ -219,11 +217,10 @@ export default function SettingsPage() {
         </Card>
 
         <div className="mt-8 flex justify-end">
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button onClick={handleSave} disabled={loading} size="lg" className="px-8">
-              {loading ? <span>Saving...</span> : <><Save className="w-5 h-5 mr-2" />Save Settings</>}
-            </Button>
-          </motion.div>
+          <motion.button onClick={handleSave} disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white disabled:opacity-50">
+            {loading ? 'Saving...' : <><Save className="w-5 h-5" />Save Settings</>}
+          </motion.button>
         </div>
       </div>
     </div>

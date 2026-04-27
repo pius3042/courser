@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectItem } from '@/components/ui/select';
@@ -101,39 +100,45 @@ export default function EditCoursePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-emerald-600/10 blur-[120px]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="mb-8">
           <Link href="/admin/courses">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Courses
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Courses
+            </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mb-2">Edit Course</h1>
-          <p className="text-gray-600">Update course information</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Edit Course</h1>
+          <p className="text-white/40">Update course information</p>
         </div>
 
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-6 h-6" /> Course Details
+            <CardTitle className="flex items-center gap-2 text-white">
+              <BookOpen className="w-6 h-6 text-emerald-400" /> Course Details
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Course Code</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Course Code</label>
                   <Input value={formData.code} onChange={e => setFormData({ ...formData, code: e.target.value.toUpperCase() })} placeholder="e.g., CSC301" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Units</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Units</label>
                   <Select value={formData.units} onValueChange={v => setFormData({ ...formData, units: v })}>
                     {['1','2','3','4','5','6'].map(u => <SelectItem key={u} value={u}>{u} Unit{u !== '1' ? 's' : ''}</SelectItem>)}
                   </Select>
@@ -141,13 +146,13 @@ export default function EditCoursePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Course Title</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Course Title</label>
                 <Input value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="e.g., Data Structures and Algorithms" required />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Department</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Department</label>
                   <Select value={formData.department} onValueChange={v => setFormData({ ...formData, department: v })} placeholder="Select Department">
                     <SelectItem value="Computer Science">Computer Science</SelectItem>
                     <SelectItem value="Mathematics">Mathematics</SelectItem>
@@ -157,7 +162,7 @@ export default function EditCoursePage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Level</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Level</label>
                   <Select value={formData.level} onValueChange={v => setFormData({ ...formData, level: v })}>
                     <SelectItem value="100">100 Level</SelectItem>
                     <SelectItem value="200">200 Level</SelectItem>
@@ -166,7 +171,7 @@ export default function EditCoursePage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Semester</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Semester</label>
                   <Select value={formData.semester} onValueChange={v => setFormData({ ...formData, semester: v })}>
                     <SelectItem value="1">First Semester</SelectItem>
                     <SelectItem value="2">Second Semester</SelectItem>
@@ -177,16 +182,19 @@ export default function EditCoursePage() {
               <div className="flex items-center gap-2">
                 <Checkbox id="compulsory" checked={formData.compulsory}
                   onCheckedChange={v => setFormData({ ...formData, compulsory: v as boolean })} />
-                <label htmlFor="compulsory" className="text-sm font-medium">Compulsory Course</label>
+                <label htmlFor="compulsory" className="text-sm font-medium text-white/70">Compulsory Course</label>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Prerequisites</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Prerequisites</label>
                 <div className="flex gap-2 mb-3">
                   <Input value={prerequisiteInput} onChange={e => setPrerequisiteInput(e.target.value.toUpperCase())}
                     placeholder="e.g., CSC201"
                     onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addPrerequisite())} />
-                  <Button type="button" onClick={addPrerequisite}>Add</Button>
+                  <motion.button type="button" onClick={addPrerequisite} whileHover={{ scale: 1.02 }}
+                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 text-white/60 hover:text-white transition-colors">
+                    Add
+                  </motion.button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {formData.prerequisites.map(prereq => (
@@ -197,13 +205,17 @@ export default function EditCoursePage() {
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-6 border-t">
-                <Button type="submit" disabled={saving} className="flex-1">
-                  <Save className="w-4 h-4 mr-2" />
+              <div className="flex gap-4 pt-6 border-t border-white/10">
+                <motion.button type="submit" disabled={saving} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-linear-to-r from-emerald-500 to-teal-600 text-white disabled:opacity-50">
+                  <Save className="w-4 h-4" />
                   {saving ? 'Saving...' : 'Save Changes'}
-                </Button>
+                </motion.button>
                 <Link href="/admin/courses" className="flex-1">
-                  <Button type="button" variant="outline" className="w-full">Cancel</Button>
+                  <motion.button type="button" whileHover={{ scale: 1.02 }}
+                    className="w-full py-3 rounded-xl font-semibold border border-white/10 text-white/60 hover:text-white transition-colors">
+                    Cancel
+                  </motion.button>
                 </Link>
               </div>
             </form>
