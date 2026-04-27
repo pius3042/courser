@@ -25,7 +25,7 @@ const SelectContext = React.createContext<{
   setOpen: (open: boolean) => void;
 } | null>(null);
 
-export function Select({ value, onValueChange, children, placeholder, required, className }: SelectProps) {
+export function Select({ value, onValueChange, children, placeholder, className }: SelectProps) {
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -60,18 +60,18 @@ export function Select({ value, onValueChange, children, placeholder, required, 
           type="button"
           onClick={() => setOpen(!open)}
           className={cn(
-            'flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm',
-            'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
-            'hover:border-gray-400 transition-colors',
-            !value && 'text-gray-400'
+            'flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
+            'hover:border-white/20 transition-colors',
+            !value && 'text-white/30'
           )}
         >
           <span>{selectedLabel || placeholder || 'Select...'}</span>
-          <ChevronDown className={cn('w-4 h-4 text-gray-400 transition-transform', open && 'rotate-180')} />
+          <ChevronDown className={cn('w-4 h-4 text-white/30 transition-transform', open && 'rotate-180')} />
         </button>
 
         {open && (
-          <div className="absolute z-50 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="absolute z-50 mt-1 w-full rounded-xl border border-white/10 bg-[#0d1530] shadow-2xl shadow-black/40">
             <div className="max-h-60 overflow-auto py-1">
               {children}
             </div>
@@ -92,8 +92,8 @@ export function SelectItem({ value, children }: SelectItemProps) {
       type="button"
       onClick={() => { ctx.onValueChange(value); ctx.setOpen(false); }}
       className={cn(
-        'flex w-full items-center px-3 py-2 text-sm hover:bg-blue-50 transition-colors text-left',
-        isSelected && 'bg-blue-50 text-blue-700 font-medium'
+        'flex w-full items-center px-3 py-2 text-sm text-white/70 hover:bg-white/5 hover:text-white transition-colors text-left',
+        isSelected && 'bg-blue-500/15 text-blue-400 font-medium'
       )}
     >
       {children}
