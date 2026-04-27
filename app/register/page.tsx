@@ -183,16 +183,21 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-6">
           <Link href="/dashboard">
-            <Button variant="ghost" className="mb-3">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-3 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mb-1">Course Registration</h1>
-          <p className="text-gray-600">
+          <h1 className="text-4xl font-bold text-white mb-1">Course Registration</h1>
+          <p className="text-white/40">
             {student?.department} · {student?.level} Level · Semester {student?.semester}
           </p>
         </div>
@@ -220,12 +225,12 @@ export default function RegisterPage() {
                 <SmartWarnings warnings={warnings} onDismiss={i => setWarnings(prev => prev.filter((_, idx) => idx !== i))} />
 
                 {/* Smart Suggestion Banner */}
-                <Card className="glass-effect border-2 border-yellow-200 bg-yellow-50/40">
+                <Card className="glass-effect border border-yellow-500/20 bg-yellow-500/5">
                   <CardContent className="p-5">
                     <div className="flex items-start gap-3">
-                      <Sparkles className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Sparkles className="w-6 h-6 text-yellow-400 shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-semibold mb-2">Smart Suggestions for {student?.level} Level · Semester {student?.semester}</p>
+                        <p className="font-semibold text-white mb-2">Smart Suggestions for {student?.level} Level · Semester {student?.semester}</p>
                         <div className="flex flex-wrap gap-2">
                           {courses.filter(c => c.compulsory).map(c => (
                             <Badge key={c.code} variant="destructive">{c.code}</Badge>
@@ -242,7 +247,7 @@ export default function RegisterPage() {
                 {/* Search + Filter */}
                 <div className="flex gap-3">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
                     <Input placeholder="Search courses..." value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
                   </div>
@@ -261,21 +266,21 @@ export default function RegisterPage() {
                         transition={{ delay: i * 0.04 }} whileHover={{ scale: 1.01, y: -2 }}
                         onClick={() => toggleCourse(course.code)}
                         className={`rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                          selected ? 'border-blue-500 bg-blue-50/60 shadow-lg' : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md'
+                          selected ? 'border-blue-500 bg-blue-500/15 shadow-lg shadow-blue-500/10' : 'border-white/10 bg-white/4 hover:border-blue-500/40 hover:bg-white/7'
                         }`}>
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
                             {/* Custom checkbox */}
-                            <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                              selected ? 'bg-blue-600 border-blue-600' : 'border-gray-300 bg-white'
+                            <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
+                              selected ? 'bg-blue-600 border-blue-600' : 'border-white/20 bg-white/5'
                             }`}>
                               {selected && <CheckCircle className="w-3 h-3 text-white" />}
                             </div>
                             <div>
-                              <h3 className="font-bold text-lg">{course.code}</h3>
-                              <p className="text-sm text-gray-600 mt-0.5">{course.title}</p>
+                              <h3 className="font-bold text-lg text-white">{course.code}</h3>
+                              <p className="text-sm text-white/50 mt-0.5">{course.title}</p>
                               {course.prerequisites?.length > 0 && (
-                                <p className="text-xs text-gray-400 mt-1">
+                                <p className="text-xs text-white/30 mt-1">
                                   Prerequisites: {course.prerequisites.join(', ')}
                                 </p>
                               )}
@@ -285,7 +290,7 @@ export default function RegisterPage() {
                             <Badge variant={course.compulsory ? 'destructive' : 'default'}>
                               {course.compulsory ? 'Compulsory' : 'Elective'}
                             </Badge>
-                            <div className="flex items-center gap-1 text-blue-600">
+                            <div className="flex items-center gap-1 text-blue-400">
                               <Award className="w-4 h-4" />
                               <span className="font-semibold text-sm">{course.units} Units</span>
                             </div>
@@ -301,40 +306,40 @@ export default function RegisterPage() {
               <div>
                 <Card className="glass-effect sticky top-6">
                   <CardHeader>
-                    <CardTitle>Registration Summary</CardTitle>
+                    <CardTitle className="text-white">Registration Summary</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Unit progress */}
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="font-medium">Credit Units</span>
+                        <span className="font-medium text-white/60">Credit Units</span>
                         <motion.span key={totalUnits} initial={{ scale: 1.4 }} animate={{ scale: 1 }}
-                          className={`font-bold ${totalUnits > maxUnits ? 'text-red-600' : 'text-blue-600'}`}>
+                          className={`font-bold ${totalUnits > maxUnits ? 'text-red-400' : 'text-blue-400'}`}>
                           <AnimatedCounter value={totalUnits} /> / {maxUnits}
                         </motion.span>
                       </div>
                       <Progress value={progress} />
                       {totalUnits > maxUnits && (
-                        <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" /> Exceeds maximum by {totalUnits - maxUnits} units
                         </p>
                       )}
                     </div>
 
-                    <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50">
-                      <span className="text-sm font-medium">Courses Selected</span>
-                      <span className="text-xl font-bold text-blue-600">{selectedCodes.length}</span>
+                    <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/8">
+                      <span className="text-sm font-medium text-white/60">Courses Selected</span>
+                      <span className="text-xl font-bold text-blue-400">{selectedCodes.length}</span>
                     </div>
 
                     {/* Selected list */}
                     {selectedCodes.length > 0 && (
-                      <div className="max-h-56 overflow-y-auto space-y-2 pt-2 border-t">
+                      <div className="max-h-56 overflow-y-auto space-y-2 pt-2 border-t border-white/8">
                         {selectedCodes.map(code => {
                           const c = courses.find(x => x.code === code);
                           return (
-                            <div key={code} className="flex justify-between items-center text-sm p-2 rounded-lg bg-blue-50">
-                              <span className="font-semibold text-blue-700">{code}</span>
-                              <span className="text-gray-500">{c?.units} units</span>
+                            <div key={code} className="flex justify-between items-center text-sm p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                              <span className="font-semibold text-blue-300">{code}</span>
+                              <span className="text-white/40">{c?.units} units</span>
                             </div>
                           );
                         })}
@@ -356,14 +361,14 @@ export default function RegisterPage() {
               className="max-w-3xl mx-auto">
               <Card className="glass-effect">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <CheckCircle className="w-6 h-6 text-emerald-400" />
                     Confirm Registration
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Student + session info */}
-                  <div className="grid grid-cols-2 gap-4 p-5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
+                  <div className="grid grid-cols-2 gap-4 p-5 rounded-xl bg-blue-500/10 border border-blue-500/20">
                     {[
                       { label: 'Student', value: student?.name || '—' },
                       { label: 'Session', value: '2025/2026' },
@@ -373,30 +378,30 @@ export default function RegisterPage() {
                       { label: 'Total Units', value: `${totalUnits} / ${maxUnits}` },
                     ].map(item => (
                       <div key={item.label}>
-                        <p className="text-xs text-gray-500">{item.label}</p>
-                        <p className="font-bold">{item.value}</p>
+                        <p className="text-xs text-white/30">{item.label}</p>
+                        <p className="font-bold text-white">{item.value}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Course list */}
                   <div>
-                    <h3 className="font-bold mb-3 flex items-center gap-2">
+                    <h3 className="font-bold mb-3 flex items-center gap-2 text-white">
                       <BookOpen className="w-5 h-5" /> Selected Courses
                     </h3>
                     <div className="space-y-2">
                       {selectedCourseObjects.map(course => (
                         <motion.div key={course.code} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                          className="flex justify-between items-center p-4 rounded-xl border-2 border-gray-100 hover:border-blue-200 transition-all">
+                          className="flex justify-between items-center p-4 rounded-xl border border-white/10 bg-white/4 hover:border-blue-500/30 transition-all">
                           <div>
-                            <p className="font-bold">{course.code}</p>
-                            <p className="text-sm text-gray-600">{course.title}</p>
+                            <p className="font-bold text-white">{course.code}</p>
+                            <p className="text-sm text-white/50">{course.title}</p>
                           </div>
                           <div className="text-right space-y-1">
                             <Badge variant={course.compulsory ? 'destructive' : 'default'}>
                               {course.compulsory ? 'Compulsory' : 'Elective'}
                             </Badge>
-                            <p className="text-sm text-gray-500">{course.units} units</p>
+                            <p className="text-sm text-white/40">{course.units} units</p>
                           </div>
                         </motion.div>
                       ))}

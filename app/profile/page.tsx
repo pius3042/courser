@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, User, Save, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
 import { useToast } from '@/components/ui/toast';
 
 export default function ProfilePage() {
@@ -21,9 +18,7 @@ export default function ProfilePage() {
   const [saved, setSaved] = useState(false);
   const [password, setPassword] = useState({ current: '', new: '', confirm: '' });
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  useEffect(() => { fetchProfile(); }, []);
 
   const fetchProfile = async () => {
     try {
@@ -32,19 +27,13 @@ export default function ProfilePage() {
       const data = await res.json();
       setStudent(data.student);
       setLoading(false);
-    } catch {
-      router.push('/login');
-    }
+    } catch { router.push('/login'); }
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.new && password.new !== password.confirm) {
-      toast('error', 'New passwords do not match');
-      return;
-    }
+    if (password.new && password.new !== password.confirm) { toast('error', 'New passwords do not match'); return; }
     setSaving(true);
-    // Simulate save
     await new Promise(r => setTimeout(r, 800));
     setSaving(false);
     setSaved(true);
@@ -55,134 +44,136 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-3xl mx-auto">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+
+      <div className="max-w-3xl mx-auto relative z-10">
         <div className="mb-8">
           <Link href="/dashboard">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold mb-1">Profile Settings</h1>
-          <p className="text-gray-600">Manage your account information</p>
+          <h1 className="text-4xl font-bold text-white mb-1">Profile Settings</h1>
+          <p className="text-white/40">Manage your account information</p>
         </div>
 
-        {/* Avatar */}
-        <Card className="glass-effect mb-6">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                {student?.name?.charAt(0)}
+        {/* Avatar card */}
+        <div className="glass-effect rounded-2xl p-6 mb-6">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-blue-500/30">
+              {student?.name?.charAt(0)}
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">{student?.name}</h2>
+              <p className="text-white/40">{student?.matricNumber}</p>
+              <div className="flex gap-2 mt-2">
+                <Badge variant="default">{student?.department}</Badge>
+                <Badge variant="secondary">{student?.level} Level</Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Form card */}
+        <div className="glass-effect rounded-2xl p-6 mb-6">
+          <h3 className="flex items-center gap-2 text-white font-bold mb-5">
+            <User className="w-5 h-5 text-white/50" /> Account Information
+          </h3>
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-white/60 mb-2">Full Name</label>
+                <Input value={student?.name || ''} readOnly className="opacity-60 cursor-not-allowed" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">{student?.name}</h2>
-                <p className="text-gray-600">{student?.matricNumber}</p>
-                <div className="flex gap-2 mt-2">
-                  <Badge variant="default">{student?.department}</Badge>
-                  <Badge variant="secondary">{student?.level} Level</Badge>
+                <label className="block text-sm font-medium text-white/60 mb-2">Matric Number</label>
+                <Input value={student?.matricNumber || ''} readOnly className="opacity-60 cursor-not-allowed" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white/60 mb-2">Email Address</label>
+              <Input value={student?.email || ''} readOnly className="opacity-60 cursor-not-allowed" />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-white/60 mb-2">Department</label>
+                <Input value={student?.department || ''} readOnly className="opacity-60 cursor-not-allowed" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/60 mb-2">Level</label>
+                <Input value={`${student?.level} Level` || ''} readOnly className="opacity-60 cursor-not-allowed" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/60 mb-2">Semester</label>
+                <Input value={`Semester ${student?.semester}` || ''} readOnly className="opacity-60 cursor-not-allowed" />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-white/8">
+              <h4 className="font-semibold text-white mb-4">Change Password</h4>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-white/60 mb-2">Current Password</label>
+                  <Input type="password" value={password.current}
+                    onChange={e => setPassword({ ...password, current: e.target.value })}
+                    placeholder="Enter current password" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-white/60 mb-2">New Password</label>
+                    <Input type="password" value={password.new}
+                      onChange={e => setPassword({ ...password, new: e.target.value })}
+                      placeholder="Enter new password" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white/60 mb-2">Confirm Password</label>
+                    <Input type="password" value={password.confirm}
+                      onChange={e => setPassword({ ...password, confirm: e.target.value })}
+                      placeholder="Confirm new password" />
+                  </div>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Info Form */}
-        <Card className="glass-effect mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" /> Account Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSave} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Full Name</label>
-                  <Input value={student?.name || ''} readOnly className="bg-gray-50" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Matric Number</label>
-                  <Input value={student?.matricNumber || ''} readOnly className="bg-gray-50" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
-                <Input value={student?.email || ''} readOnly className="bg-gray-50" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Department</label>
-                  <Input value={student?.department || ''} readOnly className="bg-gray-50" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Level</label>
-                  <Input value={`${student?.level} Level` || ''} readOnly className="bg-gray-50" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Semester</label>
-                  <Input value={`Semester ${student?.semester}` || ''} readOnly className="bg-gray-50" />
-                </div>
-              </div>
-
-              <div className="pt-4 border-t">
-                <h3 className="font-semibold mb-4">Change Password</h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Current Password</label>
-                    <Input type="password" value={password.current}
-                      onChange={e => setPassword({ ...password, current: e.target.value })}
-                      placeholder="Enter current password" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">New Password</label>
-                      <Input type="password" value={password.new}
-                        onChange={e => setPassword({ ...password, new: e.target.value })}
-                        placeholder="Enter new password" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Confirm Password</label>
-                      <Input type="password" value={password.confirm}
-                        onChange={e => setPassword({ ...password, confirm: e.target.value })}
-                        placeholder="Confirm new password" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full" size="lg" disabled={saving}>
-                {saved ? (
-                  <><CheckCircle className="w-5 h-5 mr-2 text-green-300" /> Saved!</>
-                ) : saving ? 'Saving...' : (
-                  <><Save className="w-5 h-5 mr-2" /> Save Changes</>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            <motion.button
+              type="submit"
+              disabled={saving}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/25 disabled:opacity-60"
+            >
+              {saved ? (
+                <><CheckCircle className="w-5 h-5 text-emerald-300" /> Saved!</>
+              ) : saving ? 'Saving...' : (
+                <><Save className="w-5 h-5" /> Save Changes</>
+              )}
+            </motion.button>
+          </form>
+        </div>
 
         {/* Completed Courses */}
         {student?.completedCourses?.length > 0 && (
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" /> Completed Courses
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {student.completedCourses.map((code: string) => (
-                  <Badge key={code} variant="success">{code}</Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="glass-effect rounded-2xl p-6">
+            <h3 className="flex items-center gap-2 text-white font-bold mb-4">
+              <CheckCircle className="w-5 h-5 text-emerald-400" /> Completed Courses
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {student.completedCourses.map((code: string) => (
+                <Badge key={code} variant="success">{code}</Badge>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

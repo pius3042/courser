@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft, Printer, GraduationCap, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -43,7 +42,7 @@ export default function RegistrationSlipPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -56,10 +55,15 @@ export default function RegistrationSlipPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <div className="text-center">
-          <GraduationCap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">No Registration Found</h2>
-          <p className="text-gray-600 mb-6">You haven't registered for any courses yet.</p>
-          <Link href="/register"><Button>Register Now</Button></Link>
+          <GraduationCap className="w-16 h-16 text-white/20 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">No Registration Found</h2>
+          <p className="text-white/50 mb-6">You haven't registered for any courses yet.</p>
+          <Link href="/register">
+            <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white">
+              Register Now
+            </motion.button>
+          </Link>
         </div>
       </div>
     );
@@ -75,136 +79,147 @@ export default function RegistrationSlipPage() {
 
   return (
     <>
-      {/* Print styles injected globally */}
       <style>{`
         @media print {
           body > * { display: none !important; }
-          #print-slip { display: block !important; position: fixed; inset: 0; }
+          #print-slip { display: block !important; position: fixed; inset: 0; background: white !important; }
           #print-controls { display: none !important; }
         }
       `}</style>
 
-      {/* Controls — hidden on print */}
-      <div id="print-controls" className="p-6 max-w-4xl mx-auto">
-        <Link href="/dashboard">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-          </Button>
-        </Link>
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">Registration Slip</h1>
-            <p className="text-gray-600">Your official course registration document</p>
-          </div>
-          <Button onClick={handlePrint} size="lg">
-            <Printer className="w-5 h-5 mr-2" /> Print / Save as PDF
-          </Button>
+      <div className="min-h-screen p-6">
+        {/* Background orbs */}
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+          <div className="absolute bottom-0 -left-40 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
         </div>
-      </div>
 
-      {/* The actual slip */}
-      <div id="print-slip" className="max-w-4xl mx-auto px-6 pb-12">
-        <motion.div ref={slipRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
-                  <GraduationCap className="w-10 h-10 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">University of Port Harcourt</h2>
-                  <p className="text-blue-200 text-sm">Office of the Registrar — Course Registration Slip</p>
-                  <p className="text-blue-200 text-sm mt-1">Academic Session: {reg.session}</p>
-                </div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          {/* Controls — hidden on print */}
+          <div id="print-controls" className="mb-6">
+            <Link href="/dashboard">
+              <motion.button whileHover={{ x: -4 }}
+                className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+              </motion.button>
+            </Link>
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-1">Registration Slip</h1>
+                <p className="text-white/40">Your official course registration document</p>
               </div>
-              <div className="text-right">
-                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
-                  reg.status === 'approved' ? 'bg-green-500' :
-                  reg.status === 'pending'  ? 'bg-yellow-500' : 'bg-red-500'
-                }`}>
-                  <CheckCircle className="w-4 h-4" />
-                  {reg.status.toUpperCase()}
-                </div>
-                <p className="text-blue-200 text-xs mt-2">Issued: {issueDate}</p>
-              </div>
+              <motion.button onClick={handlePrint} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-linear-to-r from-blue-500 to-violet-600 text-white">
+                <Printer className="w-5 h-5" /> Print / Save as PDF
+              </motion.button>
             </div>
           </div>
 
-          {/* Student Info */}
-          <div className="p-8 border-b-2 border-dashed border-gray-200">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Student Information</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              {[
-                { label: 'Full Name',     value: student?.name },
-                { label: 'Matric Number', value: student?.matricNumber },
-                { label: 'Department',    value: student?.department },
-                { label: 'Level',         value: `${student?.level} Level` },
-                { label: 'Semester',      value: `Semester ${student?.semester}` },
-                { label: 'Session',       value: reg.session },
-              ].map(item => (
-                <div key={item.label}>
-                  <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
-                  <p className="font-bold text-gray-900">{item.value || '—'}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* The actual slip — stays white for print */}
+          <div id="print-slip">
+            <motion.div ref={slipRef} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-white/10">
 
-          {/* Courses Table */}
-          <div className="p-8">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Registered Courses</h3>
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="bg-gray-100">
-                  {['S/N', 'Course Code', 'Course Title', 'Units', 'Type'].map(h => (
-                    <th key={h} className="text-left py-3 px-4 font-semibold text-gray-600 border border-gray-200">{h}</th>
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                      <GraduationCap className="w-10 h-10 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">University of Port Harcourt</h2>
+                      <p className="text-blue-200 text-sm">Office of the Registrar — Course Registration Slip</p>
+                      <p className="text-blue-200 text-sm mt-1">Academic Session: {reg.session}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
+                      reg.status === 'approved' ? 'bg-green-500' :
+                      reg.status === 'pending'  ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}>
+                      <CheckCircle className="w-4 h-4" />
+                      {reg.status.toUpperCase()}
+                    </div>
+                    <p className="text-blue-200 text-xs mt-2">Issued: {issueDate}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Student Info */}
+              <div className="p-8 border-b-2 border-dashed border-gray-200">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Student Information</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  {[
+                    { label: 'Full Name',     value: student?.name },
+                    { label: 'Matric Number', value: student?.matricNumber },
+                    { label: 'Department',    value: student?.department },
+                    { label: 'Level',         value: `${student?.level} Level` },
+                    { label: 'Semester',      value: `Semester ${student?.semester}` },
+                    { label: 'Session',       value: reg.session },
+                  ].map(item => (
+                    <div key={item.label}>
+                      <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
+                      <p className="font-bold text-gray-900">{item.value || '—'}</p>
+                    </div>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {registeredCourses.map((course: any, i: number) => (
-                  <tr key={course.code} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="py-3 px-4 border border-gray-200 text-gray-400">{i + 1}</td>
-                    <td className="py-3 px-4 border border-gray-200 font-bold">{course.code}</td>
-                    <td className="py-3 px-4 border border-gray-200">{course.title}</td>
-                    <td className="py-3 px-4 border border-gray-200 text-center font-semibold">{course.units}</td>
-                    <td className="py-3 px-4 border border-gray-200 text-center">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        course.compulsory ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {course.compulsory ? 'Compulsory' : 'Elective'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                <tr className="bg-blue-50 font-bold">
-                  <td colSpan={3} className="py-3 px-4 text-right border border-gray-200 text-gray-700">Total Credit Units</td>
-                  <td className="py-3 px-4 text-center text-blue-700 text-lg border border-gray-200">{totalUnits}</td>
-                  <td className="border border-gray-200" />
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Signatures */}
-          <div className="px-8 pb-10">
-            <div className="grid grid-cols-3 gap-8 pt-8 border-t-2 border-dashed border-gray-200">
-              {["Student's Signature", "HOD's Signature", "Registrar's Signature"].map(label => (
-                <div key={label} className="text-center">
-                  <div className="h-14 border-b-2 border-gray-400 mb-2" />
-                  <p className="text-xs text-gray-500">{label}</p>
                 </div>
-              ))}
-            </div>
-            <p className="text-center text-xs text-gray-400 mt-6">
-              This slip is computer-generated and valid without a physical stamp. ·
-              University of Port Harcourt · {new Date().getFullYear()}
-            </p>
+              </div>
+
+              {/* Courses Table */}
+              <div className="p-8">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Registered Courses</h3>
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      {['S/N', 'Course Code', 'Course Title', 'Units', 'Type'].map(h => (
+                        <th key={h} className="text-left py-3 px-4 font-semibold text-gray-600 border border-gray-200">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {registeredCourses.map((course: any, i: number) => (
+                      <tr key={course.code} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="py-3 px-4 border border-gray-200 text-gray-400">{i + 1}</td>
+                        <td className="py-3 px-4 border border-gray-200 font-bold text-gray-900">{course.code}</td>
+                        <td className="py-3 px-4 border border-gray-200 text-gray-700">{course.title}</td>
+                        <td className="py-3 px-4 border border-gray-200 text-center font-semibold text-gray-900">{course.units}</td>
+                        <td className="py-3 px-4 border border-gray-200 text-center">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            course.compulsory ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
+                          }`}>
+                            {course.compulsory ? 'Compulsory' : 'Elective'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="bg-blue-50 font-bold">
+                      <td colSpan={3} className="py-3 px-4 text-right border border-gray-200 text-gray-700">Total Credit Units</td>
+                      <td className="py-3 px-4 text-center text-blue-700 text-lg border border-gray-200">{totalUnits}</td>
+                      <td className="border border-gray-200" />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Signatures */}
+              <div className="px-8 pb-10">
+                <div className="grid grid-cols-3 gap-8 pt-8 border-t-2 border-dashed border-gray-200">
+                  {["Student's Signature", "HOD's Signature", "Registrar's Signature"].map(label => (
+                    <div key={label} className="text-center">
+                      <div className="h-14 border-b-2 border-gray-400 mb-2" />
+                      <p className="text-xs text-gray-500">{label}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-center text-xs text-gray-400 mt-6">
+                  This slip is computer-generated and valid without a physical stamp. ·
+                  University of Port Harcourt · {new Date().getFullYear()}
+                </p>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </>
   );

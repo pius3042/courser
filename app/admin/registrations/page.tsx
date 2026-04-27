@@ -2,22 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  FileText,
-  Search,
-  ArrowLeft,
-  CheckCircle,
-  XCircle,
-  Trash2,
-  Filter,
-} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { FileText, Search, ArrowLeft, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
 import { useToast } from '@/components/ui/toast';
 
 export default function AdminRegistrationsPage() {
@@ -29,344 +18,193 @@ export default function AdminRegistrationsPage() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchRegistrations();
-  }, []);
-
-  useEffect(() => {
-    filterRegistrations();
-  }, [registrations, searchQuery, statusFilter]);
+  useEffect(() => { fetchRegistrations(); }, []);
+  useEffect(() => { filterRegistrations(); }, [registrations, searchQuery, statusFilter]);
 
   const fetchRegistrations = async () => {
     try {
       const res = await fetch('/api/registrations');
-      if (!res.ok) {
-        router.push('/admin/login');
-        return;
-      }
+      if (!res.ok) { router.push('/admin/login'); return; }
       const data = await res.json();
       setRegistrations(data.registrations || []);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching registrations:', error);
-      setLoading(false);
-    }
+    } catch { setLoading(false); }
   };
 
   const filterRegistrations = () => {
     let filtered = registrations;
-
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (reg) =>
-          reg.studentId?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          reg.studentId?.matricNumber?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (statusFilter !== 'All') {
-      filtered = filtered.filter((reg) => reg.status === statusFilter.toLowerCase());
-    }
-
+    if (searchQuery) filtered = filtered.filter(r =>
+      r.studentId?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.studentId?.matricNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    if (statusFilter !== 'All') filtered = filtered.filter(r => r.status === statusFilter.toLowerCase());
     setFilteredRegistrations(filtered);
   };
 
-  const handleApprove = async (registrationId: string) => {
-    try {
-      const res = await fetch(`/api/registrations/${registrationId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'approved' }),
-      });
-      if (res.ok) {
-        setRegistrations(registrations.map(reg =>
-          reg._id === registrationId ? { ...reg, status: 'approved' } : reg
-        ));
-        toast('success', 'Registration approved');
-      } else {
-        toast('error', 'Failed to approve registration');
-      }
-    } catch {
-      toast('error', 'Error approving registration');
-    }
+  const handleApprove = async (id: string) => {
+    const res = await fetch(`/api/registrations/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'approved' }) });
+    if (res.ok) { setRegistrations(prev => prev.map(r => r._id === id ? { ...r, status: 'approved' } : r)); toast('success', 'Registration approved'); }
+    else toast('error', 'Failed to approve');
   };
 
-  const handleReject = async (registrationId: string) => {
-    confirm({
-      message: 'Are you sure you want to reject this registration?',
-      confirmLabel: 'Reject',
-      destructive: true,
-      onConfirm: async () => {
-        try {
-          const res = await fetch(`/api/registrations/${registrationId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: 'rejected' }),
-          });
-          if (res.ok) {
-            setRegistrations(registrations.map(reg =>
-              reg._id === registrationId ? { ...reg, status: 'rejected' } : reg
-            ));
-            toast('success', 'Registration rejected');
-          } else {
-            toast('error', 'Failed to reject registration');
-          }
-        } catch {
-          toast('error', 'Error rejecting registration');
-        }
-      },
-    });
+  const handleReject = async (id: string) => {
+    confirm({ message: 'Reject this registration?', confirmLabel: 'Reject', destructive: true, onConfirm: async () => {
+      const res = await fetch(`/api/registrations/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'rejected' }) });
+      if (res.ok) { setRegistrations(prev => prev.map(r => r._id === id ? { ...r, status: 'rejected' } : r)); toast('success', 'Registration rejected'); }
+      else toast('error', 'Failed to reject');
+    }});
   };
 
-  const handleDelete = async (registrationId: string) => {
-    confirm({
-      message: 'Are you sure you want to permanently delete this registration?',
-      confirmLabel: 'Delete',
-      destructive: true,
-      onConfirm: async () => {
-        try {
-          const res = await fetch(`/api/registrations?id=${registrationId}`, { method: 'DELETE' });
-          if (res.ok) {
-            setRegistrations(registrations.filter(reg => reg._id !== registrationId));
-            toast('success', 'Registration deleted');
-          } else {
-            const data = await res.json();
-            toast('error', data.error || 'Failed to delete registration');
-          }
-        } catch {
-          toast('error', 'Error deleting registration');
-        }
-      },
-    });
+  const handleDelete = async (id: string) => {
+    confirm({ message: 'Permanently delete this registration?', confirmLabel: 'Delete', destructive: true, onConfirm: async () => {
+      const res = await fetch(`/api/registrations?id=${id}`, { method: 'DELETE' });
+      if (res.ok) { setRegistrations(prev => prev.filter(r => r._id !== id)); toast('success', 'Registration deleted'); }
+      else { const d = await res.json(); toast('error', d.error || 'Failed to delete'); }
+    }});
   };
 
   const stats = {
     total: registrations.length,
-    pending: registrations.filter((r) => r.status === 'pending').length,
-    approved: registrations.filter((r) => r.status === 'approved').length,
-    rejected: registrations.filter((r) => r.status === 'rejected').length,
+    pending: registrations.filter(r => r.status === 'pending').length,
+    approved: registrations.filter(r => r.status === 'approved').length,
+    rejected: registrations.filter(r => r.status === 'rejected').length,
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full"
-        />
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-8">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
+            <motion.button whileHover={{ x: -4 }}
+              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+            </motion.button>
           </Link>
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">Registration Management</h1>
-              <p className="text-gray-600">Review and approve student registrations</p>
-            </div>
-          </div>
+          <h1 className="text-4xl font-bold text-white mb-1">Registration Management</h1>
+          <p className="text-white/40">Review and approve student registrations</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="glass-effect">
-            <CardContent className="p-4 text-center">
-              <FileText className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total</div>
-            </CardContent>
-          </Card>
-          <Card className="glass-effect">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-              <div className="text-sm text-gray-600">Pending</div>
-            </CardContent>
-          </Card>
-          <Card className="glass-effect">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
-              <div className="text-sm text-gray-600">Approved</div>
-            </CardContent>
-          </Card>
-          <Card className="glass-effect">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.rejected}</div>
-              <div className="text-sm text-gray-600">Rejected</div>
-            </CardContent>
-          </Card>
+          {[
+            { label: 'Total', value: stats.total, color: 'text-blue-400' },
+            { label: 'Pending', value: stats.pending, color: 'text-yellow-400' },
+            { label: 'Approved', value: stats.approved, color: 'text-emerald-400' },
+            { label: 'Rejected', value: stats.rejected, color: 'text-red-400' },
+          ].map((s, i) => (
+            <div key={i} className="glass-effect rounded-2xl p-4 text-center">
+              <div className={`text-3xl font-bold ${s.color}`}>{s.value}</div>
+              <div className="text-sm text-white/40 mt-1">{s.label}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Search and Filters */}
-        <Card className="glass-effect mb-6">
-          <CardContent className="p-6">
-            <div className="flex gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  placeholder="Search by student name or matric number..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg"
-              >
-                <option>All</option>
-                <option>Pending</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-              </select>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Search + Filter */}
+        <div className="glass-effect rounded-2xl p-5 mb-6 flex gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+            <Input placeholder="Search by name or matric number..." value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
+          </div>
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+            className="px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-white text-sm">
+            <option value="All" className="bg-[#06091a]">All</option>
+            <option value="Pending" className="bg-[#06091a]">Pending</option>
+            <option value="Approved" className="bg-[#06091a]">Approved</option>
+            <option value="Rejected" className="bg-[#06091a]">Rejected</option>
+          </select>
+        </div>
 
-        {/* Registrations List */}
+        {/* List */}
         <div className="space-y-4">
-          {filteredRegistrations.map((registration, index) => (
-            <motion.div
-              key={registration._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card className="glass-effect hover:shadow-xl transition-all">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl">
-                          {registration.studentId?.name?.charAt(0) || '?'}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold">
-                            {registration.studentId?.name || 'Unknown Student'}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {registration.studentId?.matricNumber} •{' '}
-                            {registration.studentId?.department}
-                          </p>
-                        </div>
+          {filteredRegistrations.map((reg, i) => (
+            <motion.div key={reg._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <div className="glass-effect rounded-2xl p-6 hover:border-white/15 transition-colors">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-11 h-11 rounded-xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-lg">
+                        {reg.studentId?.name?.charAt(0) || '?'}
                       </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-gray-600">Session</p>
-                          <p className="font-semibold">{registration.session}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Semester</p>
-                          <p className="font-semibold">Semester {registration.semester}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Courses</p>
-                          <p className="font-semibold">{registration.courses.length} courses</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">Total Units</p>
-                          <p className="font-semibold">{registration.totalUnits} units</p>
-                        </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-white">{reg.studentId?.name || 'Unknown Student'}</h3>
+                        <p className="text-sm text-white/40">{reg.studentId?.matricNumber} · {reg.studentId?.department}</p>
                       </div>
-
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-2">Registered Courses:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {registration.courses.map((course: string) => (
-                            <Badge key={course} variant="secondary">
-                              {course}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <p className="text-xs text-gray-500">
-                        Submitted on {new Date(registration.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
                     </div>
 
-                    <div className="flex flex-col items-end gap-3">
-                      <Badge
-                        variant={
-                          registration.status === 'approved'
-                            ? 'success'
-                            : registration.status === 'pending'
-                            ? 'warning'
-                            : 'destructive'
-                        }
-                      >
-                        {registration.status.toUpperCase()}
-                      </Badge>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                      {[
+                        { label: 'Session', value: reg.session },
+                        { label: 'Semester', value: `Semester ${reg.semester}` },
+                        { label: 'Courses', value: `${reg.courses.length} courses` },
+                        { label: 'Units', value: `${reg.totalUnits} units` },
+                      ].map(item => (
+                        <div key={item.label}>
+                          <p className="text-xs text-white/30">{item.label}</p>
+                          <p className="font-semibold text-white/80 text-sm">{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
 
-                      <div className="flex gap-2">
-                        {registration.status === 'pending' && (
-                          <>
-                            <Button
-                              size="sm"
-                              onClick={() => handleApprove(registration._id)}
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              <CheckCircle className="w-4 h-4 mr-2" />
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleReject(registration._id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <XCircle className="w-4 h-4 mr-2" />
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDelete(registration._id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                    <div className="mb-3">
+                      <p className="text-xs text-white/30 mb-2">Registered Courses</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {reg.courses.map((c: string) => (
+                          <span key={c} className="px-2 py-1 rounded-lg border border-white/10 bg-white/5 text-white/60 text-xs">{c}</span>
+                        ))}
                       </div>
+                    </div>
+
+                    <p className="text-xs text-white/25">
+                      Submitted {new Date(reg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-3">
+                    <Badge variant={reg.status === 'approved' ? 'success' : reg.status === 'pending' ? 'warning' : 'destructive'}>
+                      {reg.status.toUpperCase()}
+                    </Badge>
+                    <div className="flex gap-2">
+                      {reg.status === 'pending' && (
+                        <>
+                          <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleApprove(reg._id)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium hover:bg-emerald-500/30 transition-colors">
+                            <CheckCircle className="w-4 h-4" /> Approve
+                          </motion.button>
+                          <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleReject(reg._id)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/20 transition-colors">
+                            <XCircle className="w-4 h-4" /> Reject
+                          </motion.button>
+                        </>
+                      )}
+                      <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleDelete(reg._id)}
+                        className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-white/30 hover:text-red-400 hover:border-red-500/30 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </motion.button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
 
         {filteredRegistrations.length === 0 && (
-          <Card className="glass-effect">
-            <CardContent className="p-12 text-center">
-              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">No registrations found</h3>
-              <p className="text-gray-600">
-                {searchQuery || statusFilter !== 'All'
-                  ? 'Try adjusting your search or filters'
-                  : 'No student registrations yet'}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="glass-effect rounded-2xl p-12 text-center">
+            <FileText className="w-16 h-16 text-white/20 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">No registrations found</h3>
+            <p className="text-white/40">{searchQuery || statusFilter !== 'All' ? 'Try adjusting your filters' : 'No student registrations yet'}</p>
+          </div>
         )}
       </div>
     </div>

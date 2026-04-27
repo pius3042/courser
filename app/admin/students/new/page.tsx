@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectItem } from '@/components/ui/select';
-import { ArrowLeft, Save, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectItem } from "@/components/ui/select";
+import { ArrowLeft, Save, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-import { useToast } from '@/components/ui/toast';
+import { useToast } from "@/components/ui/toast";
 
 export default function NewStudentPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
-    matricNumber: '',
-    email: '',
-    department: '',
-    level: '100',
-    semester: '1',
-    password: '',
+    name: "",
+    matricNumber: "",
+    email: "",
+    department: "",
+    level: "100",
+    semester: "1",
+    password: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -31,19 +31,23 @@ export default function NewStudentPage() {
     setSaving(true);
 
     try {
-      const res = await fetch('/api/students', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, level: parseInt(formData.level), semester: parseInt(formData.semester) }),
+      const res = await fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          level: parseInt(formData.level),
+          semester: parseInt(formData.semester),
+        }),
       });
 
       if (res.ok) {
-        router.push('/admin/students');
+        router.push("/admin/students");
       } else {
-        toast('error', 'Failed to create student');
+        toast("error", "Failed to create student");
       }
     } catch {
-      toast('error', 'Error creating student');
+      toast("error", "Error creating student");
     } finally {
       setSaving(false);
     }
@@ -75,32 +79,44 @@ export default function NewStudentPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Full Name</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Full Name
+                  </label>
                   <Input
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="e.g., John Doe"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Matric Number</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Matric Number
+                  </label>
                   <Input
                     value={formData.matricNumber}
-                    onChange={(e) => setFormData({ ...formData, matricNumber: e.target.value })}
-                    placeholder="e.g., 2020/123456"
+                    onChange={(e) =>
+                      setFormData({ ...formData, matricNumber: e.target.value })
+                    }
+                    placeholder="e.g., u2022/5570065"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
+                <label className="block text-sm font-medium mb-2">
+                  Email Address
+                </label>
                 <Input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   placeholder="e.g., john.doe@uniport.edu.ng"
                   required
                 />
@@ -108,9 +124,19 @@ export default function NewStudentPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Department</label>
-                  <Select value={formData.department} onValueChange={v => setFormData({ ...formData, department: v })} placeholder="Select Department">
-                    <SelectItem value="Computer Science">Computer Science</SelectItem>
+                  <label className="block text-sm font-medium mb-2">
+                    Department
+                  </label>
+                  <Select
+                    value={formData.department}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, department: v })
+                    }
+                    placeholder="Select Department"
+                  >
+                    <SelectItem value="Computer Science">
+                      Computer Science
+                    </SelectItem>
                     <SelectItem value="Mathematics">Mathematics</SelectItem>
                     <SelectItem value="Physics">Physics</SelectItem>
                     <SelectItem value="Chemistry">Chemistry</SelectItem>
@@ -119,8 +145,15 @@ export default function NewStudentPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Level</label>
-                  <Select value={formData.level} onValueChange={v => setFormData({ ...formData, level: v })}>
+                  <label className="block text-sm font-medium mb-2">
+                    Level
+                  </label>
+                  <Select
+                    value={formData.level}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, level: v })
+                    }
+                  >
                     <SelectItem value="100">100 Level</SelectItem>
                     <SelectItem value="200">200 Level</SelectItem>
                     <SelectItem value="300">300 Level</SelectItem>
@@ -129,8 +162,15 @@ export default function NewStudentPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Semester</label>
-                  <Select value={formData.semester} onValueChange={v => setFormData({ ...formData, semester: v })}>
+                  <label className="block text-sm font-medium mb-2">
+                    Semester
+                  </label>
+                  <Select
+                    value={formData.semester}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, semester: v })
+                    }
+                  >
                     <SelectItem value="1">First Semester</SelectItem>
                     <SelectItem value="2">Second Semester</SelectItem>
                   </Select>
@@ -138,11 +178,15 @@ export default function NewStudentPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
+                <label className="block text-sm font-medium mb-2">
+                  Password
+                </label>
                 <Input
                   type="password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   placeholder="Enter student password"
                   required
                 />
@@ -151,7 +195,7 @@ export default function NewStudentPage() {
               <div className="flex gap-4 pt-6 border-t">
                 <Button type="submit" disabled={saving} className="flex-1">
                   <Save className="w-4 h-4 mr-2" />
-                  {saving ? 'Creating...' : 'Create Student'}
+                  {saving ? "Creating..." : "Create Student"}
                 </Button>
                 <Link href="/admin/students" className="flex-1">
                   <Button type="button" variant="outline" className="w-full">

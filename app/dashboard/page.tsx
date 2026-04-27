@@ -3,18 +3,13 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import GlassCard from '@/components/GlassCard';
-import AnimatedCounter from '@/components/AnimatedCounter';
 import {
   BookOpen, CheckCircle, Clock, TrendingUp, LogOut,
   User, Calendar, Award, GraduationCap, Sparkles, Trash2,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
 import { useToast } from '@/components/ui/toast';
 
 export default function DashboardPage() {
@@ -23,9 +18,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<any>(null);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
+  useEffect(() => { fetchStats(); }, []);
 
   const fetchStats = async () => {
     try {
@@ -34,9 +27,7 @@ export default function DashboardPage() {
       const data = await res.json();
       setStats(data);
       setLoading(false);
-    } catch {
-      router.push('/login');
-    }
+    } catch { router.push('/login'); }
   };
 
   const handleLogout = async () => {
@@ -51,13 +42,8 @@ export default function DashboardPage() {
       destructive: true,
       onConfirm: async () => {
         const res = await fetch(`/api/registrations?id=${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          fetchStats();
-          toast('success', 'Registration deleted successfully');
-        } else {
-          const data = await res.json();
-          toast('error', data.error || 'Failed to delete registration');
-        }
+        if (res.ok) { fetchStats(); toast('success', 'Registration deleted successfully'); }
+        else { const data = await res.json(); toast('error', data.error || 'Failed to delete'); }
       },
     });
   };
@@ -66,7 +52,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+          className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -77,200 +63,191 @@ export default function DashboardPage() {
   const maxUnits = 24;
   const progress = Math.round((totalUnits / maxUnits) * 100);
 
+  const statCards = [
+    { label: 'Current Session', value: '2025/2026', icon: <Calendar className="w-8 h-8 text-white" />, color: 'from-blue-500 to-cyan-500' },
+    { label: 'Registered Units', value: `${totalUnits} / ${maxUnits}`, icon: <Award className="w-8 h-8 text-white" />, color: 'from-emerald-500 to-teal-500' },
+    { label: 'Courses Selected', value: currentReg?.courses?.length || 0, icon: <BookOpen className="w-8 h-8 text-white" />, color: 'from-violet-500 to-purple-500' },
+    { label: 'Completed Courses', value: student?.completedCourses?.length || 0, icon: <CheckCircle className="w-8 h-8 text-white" />, color: 'from-indigo-500 to-blue-500' },
+  ];
+
   return (
     <div className="min-h-screen p-6">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex justify-between items-center">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />
+        <div className="absolute top-1/2 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-blue-500/30">
               {student?.name?.charAt(0) || 'S'}
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Welcome back, {student?.name?.split(' ')[0]}!</h1>
-              <p className="text-gray-600">{student?.matricNumber} · {student?.department} · {student?.level} Level</p>
+              <h1 className="text-3xl font-bold text-white">Welcome back, {student?.name?.split(' ')[0]}!</h1>
+              <p className="text-white/40 text-sm">{student?.matricNumber} · {student?.department} · {student?.level} Level</p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" /> Logout
-          </Button>
+          <motion.button
+            onClick={handleLogout}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-sm font-medium transition-all"
+          >
+            <LogOut className="w-4 h-4" /> Logout
+          </motion.button>
         </div>
-      </div>
 
-      {/* Stats Row */}
-      <div className="max-w-7xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        {[
-          { label: 'Current Session', value: '2025/2026', icon: <Calendar className="w-9 h-9 text-blue-500" />, bg: 'bg-blue-50' },
-          { label: 'Registered Units', value: `${totalUnits} / ${maxUnits}`, icon: <Award className="w-9 h-9 text-green-500" />, bg: 'bg-green-50' },
-          { label: 'Courses Selected', value: currentReg?.courses?.length || 0, icon: <BookOpen className="w-9 h-9 text-purple-500" />, bg: 'bg-purple-50' },
-          { label: 'Completed Courses', value: student?.completedCourses?.length || 0, icon: <CheckCircle className="w-9 h-9 text-indigo-500" />, bg: 'bg-indigo-50' },
-        ].map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-            <Card className="glass-effect hover:shadow-xl transition-all">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">{item.label}</p>
-                    <p className="text-2xl font-bold">{item.value}</p>
-                  </div>
-                  <div className={`p-3 rounded-xl ${item.bg}`}>{item.icon}</div>
+        {/* Stat Cards */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {statCards.map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+              <div className="glass-effect rounded-2xl p-5 flex items-center justify-between hover:border-white/15 transition-colors">
+                <div>
+                  <p className="text-sm text-white/40 mb-1">{item.label}</p>
+                  <p className="text-2xl font-bold text-white">{item.value}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+                <div className={`p-3 rounded-xl bg-linear-to-br ${item.color} opacity-80`}>
+                  {item.icon}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-      <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-3">
-        {/* Progress Card */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-blue-600" />
-                Registration Progress
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Main content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Progress Card */}
+            <div className="glass-effect rounded-2xl p-6">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-6">
+                <TrendingUp className="w-5 h-5 text-blue-400" /> Registration Progress
+              </h2>
+              <div className="mb-6">
                 <div className="flex justify-between mb-2 text-sm font-medium">
-                  <span>Credit Units Used</span>
-                  <span className={totalUnits > 20 ? 'text-orange-600 font-bold' : 'text-blue-600 font-bold'}>
+                  <span className="text-white/60">Credit Units Used</span>
+                  <span className={`font-bold ${totalUnits > 20 ? 'text-orange-400' : 'text-blue-400'}`}>
                     {totalUnits} / {maxUnits} Units
                   </span>
                 </div>
-                <Progress value={progress} />
-                <p className="text-xs text-gray-500 mt-1">{maxUnits - totalUnits} units remaining</p>
+                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className={`h-full rounded-full ${totalUnits > 20 ? 'bg-linear-to-r from-orange-500 to-red-500' : 'bg-linear-to-r from-blue-500 to-violet-500'}`}
+                  />
+                </div>
+                <p className="text-xs text-white/30 mt-1">{maxUnits - totalUnits} units remaining</p>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/8">
                 {[
-                  { label: 'Courses', value: currentReg?.courses?.length || 0, color: 'blue', icon: <BookOpen className="w-7 h-7 text-blue-600 mx-auto mb-2" /> },
-                  { label: 'Units', value: totalUnits, color: 'green', icon: <Award className="w-7 h-7 text-green-600 mx-auto mb-2" /> },
-                  { label: 'Status', value: currentReg?.status || 'None', color: 'purple', icon: <CheckCircle className="w-7 h-7 text-purple-600 mx-auto mb-2" /> },
+                  { label: 'Courses', value: currentReg?.courses?.length || 0, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+                  { label: 'Units', value: totalUnits, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+                  { label: 'Status', value: currentReg?.status || 'None', color: 'text-violet-400', bg: 'bg-violet-500/10' },
                 ].map((item, i) => (
-                  <motion.div key={i} whileHover={{ scale: 1.05 }}
-                    className={`text-center p-4 rounded-xl bg-${item.color}-50`}>
-                    {item.icon}
-                    <p className={`text-2xl font-bold text-${item.color}-600 capitalize`}>{item.value}</p>
-                    <p className="text-xs text-gray-600">{item.label}</p>
-                  </motion.div>
+                  <div key={i} className={`text-center p-4 rounded-xl ${item.bg}`}>
+                    <p className={`text-2xl font-bold capitalize ${item.color}`}>{item.value}</p>
+                    <p className="text-xs text-white/40 mt-1">{item.label}</p>
+                  </div>
                 ))}
               </div>
 
-              <Link href="/register">
-                <Button className="w-full" size="lg">
-                  <BookOpen className="w-5 h-5 mr-2" />
+              <Link href="/register" className="block mt-6">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/25"
+                >
+                  <BookOpen className="w-5 h-5" />
                   {currentReg ? 'Modify Registration' : 'Start Registration'}
-                </Button>
+                </motion.button>
               </Link>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Current Registration Courses */}
-          {currentReg?.courses?.length > 0 && (
-            <Card className="glass-effect">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <GraduationCap className="w-6 h-6 text-indigo-600" />
-                  Current Registered Courses
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            {/* Registered Courses */}
+            {currentReg?.courses?.length > 0 && (
+              <div className="glass-effect rounded-2xl p-6">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-4">
+                  <GraduationCap className="w-5 h-5 text-indigo-400" /> Current Registered Courses
+                </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {currentReg.courses.map((code: string, i: number) => (
                     <motion.div key={code} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.05 }}
-                      className="p-3 rounded-xl border-2 border-blue-100 bg-blue-50 text-center font-bold text-blue-700">
+                      className="p-3 rounded-xl border border-blue-500/30 bg-blue-500/10 text-center font-bold text-blue-300">
                       {code}
                     </motion.div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Student Info */}
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5" /> Student Info
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              {[
-                { label: 'Name', value: student?.name },
-                { label: 'Matric No.', value: student?.matricNumber },
-                { label: 'Department', value: student?.department },
-                { label: 'Level', value: `${student?.level} Level` },
-                { label: 'Semester', value: `Semester ${student?.semester}` },
-              ].map((item) => (
-                <div key={item.label} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
-                  <span className="text-gray-500">{item.label}</span>
-                  <span className="font-semibold text-right">{item.value}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Student Info */}
+            <div className="glass-effect rounded-2xl p-5">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-white mb-4">
+                <User className="w-4 h-4 text-white/50" /> Student Info
+              </h3>
+              <div className="space-y-3 text-sm">
+                {[
+                  { label: 'Name', value: student?.name },
+                  { label: 'Matric No.', value: student?.matricNumber },
+                  { label: 'Department', value: student?.department },
+                  { label: 'Level', value: `${student?.level} Level` },
+                  { label: 'Semester', value: `Semester ${student?.semester}` },
+                ].map(item => (
+                  <div key={item.label} className="flex justify-between py-2 border-b border-white/5 last:border-0">
+                    <span className="text-white/40">{item.label}</span>
+                    <span className="font-semibold text-white/80 text-right">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          {/* Quick Actions */}
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              <Link href="/register">
-                <Button variant="outline" className="w-full justify-start">
-                  <BookOpen className="w-4 h-4 mr-2" /> Register Courses
-                </Button>
-              </Link>
-              <Link href="/history">
-                <Button variant="outline" className="w-full justify-start">
-                  <Clock className="w-4 h-4 mr-2" /> View History
-                </Button>
-              </Link>
-              <Link href="/profile">
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="w-4 h-4 mr-2" /> Profile Settings
-                </Button>
-              </Link>
-              {currentReg && (
-                <Link href="/slip">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Sparkles className="w-4 h-4 mr-2" /> Print Reg. Slip
-                  </Button>
-                </Link>
-              )}
-            </CardContent>
-          </Card>
+            {/* Quick Actions */}
+            <div className="glass-effect rounded-2xl p-5">
+              <h3 className="text-sm font-bold text-white mb-4">Quick Actions</h3>
+              <div className="flex flex-col gap-2">
+                {[
+                  { href: '/register', icon: <BookOpen className="w-4 h-4" />, label: 'Register Courses' },
+                  { href: '/history', icon: <Clock className="w-4 h-4" />, label: 'View History' },
+                  { href: '/profile', icon: <User className="w-4 h-4" />, label: 'Profile Settings' },
+                  ...(currentReg ? [{ href: '/slip', icon: <Sparkles className="w-4 h-4" />, label: 'Print Reg. Slip' }] : []),
+                ].map(item => (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div whileHover={{ x: 4 }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/8 bg-white/4 hover:bg-white/8 text-white/60 hover:text-white text-sm font-medium transition-all cursor-pointer">
+                      {item.icon} {item.label}
+                    </motion.div>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-          {/* Recent Activity */}
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="text-lg">Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
+            {/* Recent Activity */}
+            <div className="glass-effect rounded-2xl p-5">
+              <h3 className="text-sm font-bold text-white mb-4">Recent Activity</h3>
               {stats?.registrations?.length > 0 ? (
                 <div className="space-y-3">
                   {stats.registrations.slice(0, 3).map((reg: any, idx: number) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/4 border border-white/8">
+                      <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{reg.session} — Sem {reg.semester}</p>
-                        <p className="text-xs text-gray-500">{reg.courses.length} courses · {reg.totalUnits} units</p>
+                        <p className="text-sm font-medium text-white/80">{reg.session} — Sem {reg.semester}</p>
+                        <p className="text-xs text-white/40">{reg.courses.length} courses · {reg.totalUnits} units</p>
                       </div>
                       <Badge variant={reg.status === 'approved' ? 'success' : reg.status === 'pending' ? 'warning' : 'destructive'}>
                         {reg.status}
                       </Badge>
                       {reg.status !== 'approved' && (
-                        <button
-                          onClick={() => handleDeleteRegistration(reg._id)}
-                          className="p-1.5 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                          title="Delete registration"
-                        >
+                        <button onClick={() => handleDeleteRegistration(reg._id)}
+                          className="p-1.5 rounded-md text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       )}
@@ -278,10 +255,10 @@ export default function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 text-center py-4">No registration history yet</p>
+                <p className="text-sm text-white/30 text-center py-4">No registration history yet</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

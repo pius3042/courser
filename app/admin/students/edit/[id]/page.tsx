@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectItem } from '@/components/ui/select';
-import { ArrowLeft, Save, User } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
-import { useToast } from '@/components/ui/toast';
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectItem } from "@/components/ui/select";
+import { ArrowLeft, Save, User } from "lucide-react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { useToast } from "@/components/ui/toast";
 
 export default function EditStudentPage() {
   const router = useRouter();
@@ -18,13 +18,13 @@ export default function EditStudentPage() {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
-    name: '',
-    matricNumber: '',
-    email: '',
-    department: '',
-    level: '100',
-    semester: '1',
-    password: '',
+    name: "",
+    matricNumber: "",
+    email: "",
+    department: "",
+    level: "100",
+    semester: "1",
+    password: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,11 +32,14 @@ export default function EditStudentPage() {
   useEffect(() => {
     if (!id) return;
     fetch(`/api/students/${id}`)
-      .then(res => {
-        if (!res.ok) { router.push('/admin/students'); return null; }
+      .then((res) => {
+        if (!res.ok) {
+          router.push("/admin/students");
+          return null;
+        }
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data) return;
         const s = data.student;
         setFormData({
@@ -46,11 +49,11 @@ export default function EditStudentPage() {
           department: s.department,
           level: String(s.level),
           semester: String(s.semester),
-          password: '',
+          password: "",
         });
         setLoading(false);
       })
-      .catch(() => router.push('/admin/students'));
+      .catch(() => router.push("/admin/students"));
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,18 +61,22 @@ export default function EditStudentPage() {
     setSaving(true);
     try {
       const res = await fetch(`/api/students/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, level: parseInt(formData.level), semester: parseInt(formData.semester) }),
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          level: parseInt(formData.level),
+          semester: parseInt(formData.semester),
+        }),
       });
       if (res.ok) {
-        toast('success', 'Student updated successfully');
-        router.push('/admin/students');
+        toast("success", "Student updated successfully");
+        router.push("/admin/students");
       } else {
-        toast('error', 'Failed to update student');
+        toast("error", "Failed to update student");
       }
     } catch {
-      toast('error', 'Error updating student');
+      toast("error", "Error updating student");
     } finally {
       setSaving(false);
     }
@@ -78,8 +85,11 @@ export default function EditStudentPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full" />
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full"
+        />
       </div>
     );
   }
@@ -107,25 +117,63 @@ export default function EditStudentPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Full Name</label>
-                  <Input value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="e.g., John Doe" required />
+                  <label className="block text-sm font-medium mb-2">
+                    Full Name
+                  </label>
+                  <Input
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="e.g., John Doe"
+                    required
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Matric Number</label>
-                  <Input value={formData.matricNumber} onChange={e => setFormData({ ...formData, matricNumber: e.target.value })} placeholder="e.g., 2020/123456" required />
+                  <label className="block text-sm font-medium mb-2">
+                    Matric Number
+                  </label>
+                  <Input
+                    value={formData.matricNumber}
+                    onChange={(e) =>
+                      setFormData({ ...formData, matricNumber: e.target.value })
+                    }
+                    placeholder="e.g., u2022/5570025"
+                    required
+                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
-                <Input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="e.g., john@uniport.edu.ng" required />
+                <label className="block text-sm font-medium mb-2">
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="e.g., john@uniport.edu.ng"
+                  required
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Department</label>
-                  <Select value={formData.department} onValueChange={v => setFormData({ ...formData, department: v })} placeholder="Select Department">
-                    <SelectItem value="Computer Science">Computer Science</SelectItem>
+                  <label className="block text-sm font-medium mb-2">
+                    Department
+                  </label>
+                  <Select
+                    value={formData.department}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, department: v })
+                    }
+                    placeholder="Select Department"
+                  >
+                    <SelectItem value="Computer Science">
+                      Computer Science
+                    </SelectItem>
                     <SelectItem value="Mathematics">Mathematics</SelectItem>
                     <SelectItem value="Physics">Physics</SelectItem>
                     <SelectItem value="Chemistry">Chemistry</SelectItem>
@@ -133,8 +181,15 @@ export default function EditStudentPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Level</label>
-                  <Select value={formData.level} onValueChange={v => setFormData({ ...formData, level: v })}>
+                  <label className="block text-sm font-medium mb-2">
+                    Level
+                  </label>
+                  <Select
+                    value={formData.level}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, level: v })
+                    }
+                  >
                     <SelectItem value="100">100 Level</SelectItem>
                     <SelectItem value="200">200 Level</SelectItem>
                     <SelectItem value="300">300 Level</SelectItem>
@@ -142,8 +197,15 @@ export default function EditStudentPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Semester</label>
-                  <Select value={formData.semester} onValueChange={v => setFormData({ ...formData, semester: v })}>
+                  <label className="block text-sm font-medium mb-2">
+                    Semester
+                  </label>
+                  <Select
+                    value={formData.semester}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, semester: v })
+                    }
+                  >
                     <SelectItem value="1">First Semester</SelectItem>
                     <SelectItem value="2">Second Semester</SelectItem>
                   </Select>
@@ -151,17 +213,31 @@ export default function EditStudentPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">New Password <span className="text-gray-400 font-normal">(leave blank to keep current)</span></label>
-                <Input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="Enter new password or leave blank" />
+                <label className="block text-sm font-medium mb-2">
+                  New Password{" "}
+                  <span className="text-gray-400 font-normal">
+                    (leave blank to keep current)
+                  </span>
+                </label>
+                <Input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder="Enter new password or leave blank"
+                />
               </div>
 
               <div className="flex gap-4 pt-6 border-t">
                 <Button type="submit" disabled={saving} className="flex-1">
                   <Save className="w-4 h-4 mr-2" />
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? "Saving..." : "Save Changes"}
                 </Button>
                 <Link href="/admin/students" className="flex-1">
-                  <Button type="button" variant="outline" className="w-full">Cancel</Button>
+                  <Button type="button" variant="outline" className="w-full">
+                    Cancel
+                  </Button>
                 </Link>
               </div>
             </form>
