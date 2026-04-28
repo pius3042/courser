@@ -20,7 +20,11 @@ export async function GET(req: NextRequest) {
       const registrations = await Registration.find({ studentId: session.id })
         .sort({ createdAt: -1 });
       
-      const currentRegistration = registrations[0];
+      // Get current registration for the student's current semester only
+      const currentRegistration = registrations.find(
+        r => r.semester === student?.semester
+      );
+      
       const availableCourses = await Course.find({
         department: student?.department,
         level: student?.level,

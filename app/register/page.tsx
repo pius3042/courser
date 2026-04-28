@@ -45,13 +45,15 @@ export default function RegisterPage() {
       setCourses(suggestData.suggested || []);
       setStudent(suggestData.student);
 
-      // Pre-fill existing registration if any
+      // Pre-fill existing registration ONLY if it's for the current semester
       if (regRes.ok) {
         const regData = await regRes.json();
-        const current = regData.registrations?.[0];
-        if (current) {
-          setExistingRegistration(current);
-          setSelectedCodes(current.courses || []);
+        const currentSemesterReg = regData.registrations?.find(
+          (r: any) => r.semester === suggestData.student?.semester
+        );
+        if (currentSemesterReg) {
+          setExistingRegistration(currentSemesterReg);
+          setSelectedCodes(currentSemesterReg.courses || []);
         }
       }
       setLoading(false);
@@ -369,7 +371,7 @@ export default function RegisterPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Student + session info */}
-                  <div className="grid grid-cols-2 gap-4 p-5 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 p-4 md:p-5 rounded-xl bg-blue-500/10 border border-blue-500/20">
                     {[
                       { label: 'Student', value: student?.name || '—' },
                       { label: 'Session', value: '2025/2026' },
@@ -380,40 +382,40 @@ export default function RegisterPage() {
                     ].map(item => (
                       <div key={item.label}>
                         <p className="text-xs text-white/30">{item.label}</p>
-                        <p className="font-bold text-white">{item.value}</p>
+                        <p className="font-bold text-white text-sm md:text-base break-words">{item.value}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Course list */}
                   <div>
-                    <h3 className="font-bold mb-3 flex items-center gap-2 text-white">
+                    <h3 className="font-bold mb-3 flex items-center gap-2 text-white text-sm md:text-base">
                       <BookOpen className="w-5 h-5" /> Selected Courses
                     </h3>
                     <div className="space-y-2">
                       {selectedCourseObjects.map(course => (
                         <motion.div key={course.code} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                          className="flex justify-between items-center p-4 rounded-xl border border-white/10 bg-white/4 hover:border-blue-500/30 transition-all">
-                          <div>
-                            <p className="font-bold text-white">{course.code}</p>
-                            <p className="text-sm text-white/50">{course.title}</p>
+                          className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 p-3 md:p-4 rounded-xl border border-white/10 bg-white/4 hover:border-blue-500/30 transition-all">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-white text-sm md:text-base">{course.code}</p>
+                            <p className="text-xs md:text-sm text-white/50 truncate">{course.title}</p>
                           </div>
-                          <div className="text-right space-y-1">
-                            <Badge variant={course.compulsory ? 'destructive' : 'default'}>
+                          <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-1 sm:text-right shrink-0">
+                            <Badge variant={course.compulsory ? 'destructive' : 'default'} className="text-xs">
                               {course.compulsory ? 'Compulsory' : 'Elective'}
                             </Badge>
-                            <p className="text-sm text-white/40">{course.units} units</p>
+                            <p className="text-xs md:text-sm text-white/40">{course.units} units</p>
                           </div>
                         </motion.div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex gap-4 pt-2">
-                    <Button variant="outline" className="flex-1" onClick={() => setStep(0)}>
+                  <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2">
+                    <Button variant="outline" className="flex-1 order-2 sm:order-1" onClick={() => setStep(0)}>
                       <ArrowLeft className="w-5 h-5 mr-2" /> Back
                     </Button>
-                    <Button className="flex-1" size="lg" onClick={handleSubmit} disabled={submitting}>
+                    <Button className="flex-1 order-1 sm:order-2" size="lg" onClick={handleSubmit} disabled={submitting}>
                       {submitting ? (
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                           className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2" />

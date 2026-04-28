@@ -71,7 +71,7 @@ export function Select({ value, onValueChange, children, placeholder, className 
         </button>
 
         {open && (
-          <div className="absolute z-50 mt-1 w-full rounded-xl border border-white/10 bg-[#0d1530] shadow-2xl shadow-black/40">
+          <div className="absolute z-[9999] mt-1 w-full rounded-xl border border-white/10 bg-[#0d1530] shadow-2xl shadow-black/40">
             <div className="max-h-60 overflow-auto py-1">
               {children}
             </div>
