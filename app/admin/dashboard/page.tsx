@@ -3,9 +3,33 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import TourGuide from '@/components/TourGuide';
 import { Users, BookOpen, FileText, TrendingUp, LogOut, Plus, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+const ADMIN_TOUR_STEPS = [
+  {
+    title: '👋 Welcome to Admin Dashboard!',
+    description: 'This is your control center for managing the entire course registration system. You can manage students, courses, and approve registrations.',
+  },
+  {
+    title: '📊 System Overview',
+    description: 'View key statistics at a glance: total students, courses, pending and approved registrations. These cards give you a quick snapshot of system activity.',
+  },
+  {
+    title: '👥 Manage Students & Courses',
+    description: 'Use the quick actions sidebar to add new students, create courses, or access the full management pages for detailed operations.',
+  },
+  {
+    title: '✅ Review Registrations',
+    description: 'Check the "Recent Registrations" section to approve or reject student course registrations. Click "View Registrations" for the full list.',
+  },
+  {
+    title: '⚙️ System Settings',
+    description: 'Access settings to change the current semester, toggle registration status, and configure prerequisite checking. You can restart this guide anytime using the help button!',
+  },
+];
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -64,6 +88,9 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen p-6">
+      {/* Tour Guide */}
+      <TourGuide steps={ADMIN_TOUR_STEPS} tourKey="admin_dashboard" />
+
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
         <div className="absolute bottom-0 -left-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />

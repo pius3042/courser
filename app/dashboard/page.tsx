@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import TourGuide from '@/components/TourGuide';
 import {
   BookOpen, CheckCircle, Clock, TrendingUp, LogOut,
   User, Calendar, Award, GraduationCap, Sparkles, Trash2,
@@ -11,6 +12,29 @@ import {
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '@/components/ui/toast';
+
+const STUDENT_TOUR_STEPS = [
+  {
+    title: '👋 Welcome to Your Dashboard!',
+    description: 'This is your central hub for managing course registrations. Here you can view your progress, register for courses, and track your academic journey.',
+  },
+  {
+    title: '📊 Registration Progress',
+    description: 'Monitor your credit units and registration status. The progress bar shows how many units you\'ve registered out of the maximum allowed (24 units).',
+  },
+  {
+    title: '📚 Register for Courses',
+    description: 'Click "Start Registration" or "Modify Registration" to select your courses. The system will suggest courses based on your level and semester.',
+  },
+  {
+    title: '📜 Quick Actions',
+    description: 'Use the sidebar to access your registration history, profile settings, and download your registration slip once approved.',
+  },
+  {
+    title: '✅ You\'re All Set!',
+    description: 'You can restart this guide anytime by clicking the help button in the bottom-right corner. Happy learning!',
+  },
+];
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -72,6 +96,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen p-6">
+      {/* Tour Guide */}
+      <TourGuide steps={STUDENT_TOUR_STEPS} tourKey="student_dashboard" />
+
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/10 blur-[120px]" />

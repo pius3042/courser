@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Printer, GraduationCap, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Printer, GraduationCap, CheckCircle, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -11,6 +11,8 @@ export default function RegistrationSlipPage() {
   const slipRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [allRegistrations, setAllRegistrations] = useState<any[]>([]);
+  const [selectedRegistrationId, setSelectedRegistrationId] = useState<string>('');
 
   useEffect(() => {
     fetchData();
@@ -18,16 +20,28 @@ export default function RegistrationSlipPage() {
 
   const fetchData = async () => {
     try {
-      const [statsRes, coursesRes] = await Promise.all([
+      const [statsRes, coursesRes, registrationsRes] = await Promise.all([
         fetch('/api/dashboard/stats'),
         fetch('/api/courses'),
+        fetch('/api/registrations'),
       ]);
       if (!statsRes.ok) { router.push('/login'); return; }
       const stats = await statsRes.json();
       const coursesData = await coursesRes.json();
+      const registrationsData = await registrationsRes.json();
 
       const courseMap: Record<string, any> = {};
       (coursesData.courses || []).forEach((c: any) => { courseMap[c.code] = c; });
+
+      const registrations = registrationsData.registrations || [];
+      setAllRegistrations(registrations);
+      
+      // Set the current registration as default
+      if (stats.currentRegistration) {
+        setSelectedRegistrationId(stats.currentRegistration._id);
+      } else if (registrations.length > 0) {
+        setSelectedRegistrationId(registrations[0]._id);
+      }
 
       setData({ stats, courseMap });
       setLoading(false);
@@ -48,8 +62,10 @@ export default function RegistrationSlipPage() {
   }
 
   const student = data?.stats?.student;
-  const reg = data?.stats?.currentRegistration;
   const courseMap = data?.courseMap || {};
+  
+  // Get the selected registration or fall back to current
+  const reg = allRegistrations.find(r => r._id === selectedRegistrationId) || data?.stats?.currentRegistration;
 
   if (!reg) {
     return (
@@ -103,15 +119,38 @@ export default function RegistrationSlipPage() {
                 <ArrowLeft className="w-4 h-4" /> Back to Dashboard
               </motion.button>
             </Link>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-white mb-1">Registration Slip</h1>
                 <p className="text-white/40">Your official course registration document</p>
               </div>
-              <motion.button onClick={handlePrint} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-linear-to-r from-blue-500 to-violet-600 text-white">
-                <Printer className="w-5 h-5" /> Print / Save as PDF
-              </motion.button>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                {/* Session/Semester Selector */}
+                {allRegistrations.length > 1 && (
+                  <div className="relative">
+                    <select
+                      value={selectedRegistrationId}
+                      onChange={(e) => setSelectedRegistrationId(e.target.value)}
+                      className="appearance-none w-full sm:w-auto px-4 py-2.5 pr-10 rounded-xl font-semibold text-sm bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/15 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {allRegistrations.map((registration) => (
+                        <option 
+                          key={registration._id} 
+                          value={registration._id}
+                          className="bg-gray-900 text-white"
+                        >
+                          {registration.session} - Semester {registration.semester}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white pointer-events-none" />
+                  </div>
+                )}
+                <motion.button onClick={handlePrint} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-blue-500 to-violet-600 text-white">
+                  <Printer className="w-5 h-5" /> Print / Save as PDF
+                </motion.button>
+              </div>
             </div>
           </div>
 
