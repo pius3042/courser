@@ -1,6 +1,6 @@
 # Smart Course Registration Portal - University of Port Harcourt
 
-A modern, intelligent course registration system built with Next.js, featuring smart course suggestions, real-time validation, interactive tour guides, and a beautiful UI designed to impress university supervisors.
+A modern, intelligent course registration system built with Next.js 16, React 19, and TypeScript. Features smart course suggestions, real-time validation, interactive tour guides, and a stunning glassmorphism UI with smooth animations powered by Framer Motion.
 
 ## 🌟 Features
 
@@ -53,14 +53,7 @@ A modern, intelligent course registration system built with Next.js, featuring s
 git clone <repository-url>
 cd uniport-course-registration
 npm install
-npm run setup
 ```
-
-The setup script will:
-- Create necessary environment files
-- Connect to MongoDB
-- Seed the database with sample data
-- Create default admin and student accounts
 
 2. **Configure environment variables:**
 Create a `.env.local` file in the root directory:
@@ -69,12 +62,25 @@ MONGODB_URI=mongodb://localhost:27017/uniport-registration
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
 ```
 
-3. **Start development server:**
+3. **Seed the database:**
+```bash
+npm run setup
+```
+
+The setup script will:
+- Connect to MongoDB
+- Clear existing data
+- Seed sample courses (Computer Science 300-400 level)
+- Create default admin account (admin@uniport.edu.ng / admin123)
+- Create sample student accounts
+- Set up system settings
+
+4. **Start development server:**
 ```bash
 npm run dev
 ```
 
-4. **Open your browser:**
+5. **Open your browser:**
 ```
 http://localhost:3000
 ```
@@ -100,14 +106,18 @@ You can restart the tour anytime by clicking the **help button** (?) in the bott
 
 ## 🛠 Tech Stack
 
-- **Frontend:** Next.js 15 (App Router), React 19, TypeScript
-- **Styling:** Tailwind CSS, Framer Motion
-- **UI Components:** shadcn/ui, Lucide Icons
-- **Backend:** Next.js API Routes
-- **Database:** MongoDB with Mongoose
-- **Authentication:** JWT with httpOnly cookies
-- **State Management:** React Hooks (useState, useEffect)
-- **Form Handling:** Controlled components with validation
+- **Frontend:** Next.js 16.2.3 (App Router), React 19.2.4, TypeScript 5
+- **Styling:** Tailwind CSS 4, Framer Motion 11
+- **UI Components:** Custom components with shadcn/ui patterns, Lucide Icons
+- **Animations:** Framer Motion for smooth transitions and micro-interactions
+- **Backend:** Next.js API Routes with TypeScript
+- **Database:** MongoDB with Mongoose 8.3
+- **Authentication:** JWT (jose 5.2) with httpOnly cookies, bcryptjs for password hashing
+- **Validation:** Zod 3.23 for schema validation
+- **Charts:** Recharts 2.12 for dashboard analytics
+- **Effects:** Canvas Confetti for celebration animations
+- **State Management:** React Hooks (useState, useEffect, useCallback)
+- **Form Handling:** Controlled components with real-time validation
 
 ## 📁 Project Structure
 
@@ -253,27 +263,32 @@ Access settings at: `/admin/settings`
 
 ## 🎨 Design Philosophy
 
-The UI follows modern design principles:
-- **Glassmorphism:** Translucent cards with backdrop blur and subtle borders
-- **Gradient Accents:** Smooth color transitions from blue to violet
-- **Micro-animations:** Smooth, purposeful motion using Framer Motion
-- **Accessibility:** WCAG compliant color contrasts and semantic HTML
-- **Mobile-first:** Responsive design starting from 320px width
-- **Dark Theme:** Elegant dark background with vibrant accent colors
-- **Visual Hierarchy:** Clear information structure with proper spacing
-- **Interactive Feedback:** Hover states, loading indicators, and success animations
+The UI follows modern design principles with a focus on visual excellence:
+
+- **Glassmorphism:** Translucent cards with backdrop blur (`backdrop-blur-sm`), subtle borders (`border-white/8`), and layered transparency
+- **Gradient Accents:** Smooth color transitions using `bg-linear-to-r from-blue-500 to-violet-600` throughout the interface
+- **Animated Backgrounds:** Glowing orbs with blur effects and grid overlays for depth
+- **Micro-animations:** Smooth, purposeful motion using Framer Motion (`whileHover`, `whileTap`, `initial/animate`)
+- **Accessibility:** Semantic HTML, proper ARIA labels, and keyboard navigation support
+- **Mobile-first:** Fully responsive design starting from 320px width with breakpoints at 640px (sm), 768px (md), 1024px (lg)
+- **Dark Theme:** Rich dark background (`#06091a`) with vibrant accent colors and glowing effects
+- **Visual Hierarchy:** Clear information structure with proper spacing, typography scale, and color contrast
+- **Interactive Feedback:** Hover states with scale transforms, loading indicators, success animations with confetti
+- **Performance:** Optimized animations with `transform` and `opacity` for 60fps rendering
 
 ### Color Palette
-- **Primary:** Blue (500-600) to Violet (600)
-- **Success:** Emerald/Green for approved states
-- **Warning:** Yellow/Orange for pending states
-- **Error:** Red for rejected/error states
-- **Neutral:** White with varying opacity for text and borders
+- **Primary Gradient:** `from-blue-500 to-violet-600` for CTAs and highlights
+- **Success:** Emerald/Green (`emerald-500`, `green-600`) for approved states
+- **Warning:** Yellow/Orange (`yellow-500`, `orange-500`) for pending states
+- **Error:** Red (`red-500`, `red-600`) for rejected/error states
+- **Neutral:** White with varying opacity (`white/5`, `white/10`, `white/40`, `white/60`) for text and borders
+- **Background:** Deep navy (`#06091a`, `#080d22`) with gradient overlays
 
 ### Typography
-- **Headings:** Bold, large sizes with proper hierarchy
-- **Body Text:** Clear, readable with appropriate line height
-- **Responsive Sizing:** Scales from mobile to desktop using Tailwind breakpoints
+- **Headings:** Bold weights (600-700) with large sizes (`text-4xl` to `text-7xl`)
+- **Body Text:** Regular weight (400) with proper line height (`leading-relaxed`)
+- **Responsive Sizing:** Scales from mobile to desktop using Tailwind breakpoints (`text-base sm:text-lg md:text-xl`)
+- **Font Stack:** System fonts for optimal performance and native feel
 
 ## 📊 Sample Course Data
 
@@ -328,39 +343,53 @@ npm run build
 npm start
 ```
 
+The build process:
+- Compiles TypeScript to JavaScript
+- Optimizes React components
+- Generates static pages where possible
+- Minifies CSS and JavaScript
+- Optimizes images and assets
+
 ### Environment Setup for Production
-1. **MongoDB:** Use MongoDB Atlas or a production MongoDB instance
-2. **JWT Secret:** Generate a strong, random secret key
-3. **HTTPS:** Enable HTTPS for secure cookie transmission
-4. **Environment Variables:** Set production values in hosting platform
+1. **MongoDB:** Use MongoDB Atlas or a production MongoDB instance with authentication enabled
+2. **JWT Secret:** Generate a strong, random secret key (32+ characters)
+3. **HTTPS:** Enable HTTPS for secure cookie transmission (required for production)
+4. **Environment Variables:** Set production values in your hosting platform's dashboard
 
 ### Deployment Platforms
 This Next.js application can be deployed to:
-- **Vercel** (Recommended - zero configuration)
-- **Netlify**
-- **AWS Amplify**
-- **DigitalOcean App Platform**
-- **Self-hosted** with Node.js
+- **Vercel** (Recommended - zero configuration, automatic deployments)
+- **Netlify** (Good alternative with similar features)
+- **AWS Amplify** (For AWS ecosystem integration)
+- **DigitalOcean App Platform** (Simple and affordable)
+- **Railway** (Easy deployment with database hosting)
+- **Self-hosted** with Node.js (requires manual configuration)
 
 ### Vercel Deployment (Recommended)
 ```bash
 # Install Vercel CLI
 npm i -g vercel
 
+# Login to Vercel
+vercel login
+
 # Deploy
 vercel
 ```
 
 Add environment variables in Vercel dashboard:
-- `MONGODB_URI`
-- `JWT_SECRET`
+- `MONGODB_URI` - Your MongoDB connection string
+- `JWT_SECRET` - Your secret key for JWT signing
 
 ### Performance Optimizations
-- Server-side rendering for initial page loads
-- API route caching where appropriate
-- Image optimization with Next.js Image component
-- Code splitting and lazy loading
-- MongoDB connection pooling
+- **Server-side rendering (SSR):** Initial page loads are server-rendered for fast FCP
+- **Static generation:** Landing page is statically generated at build time
+- **API route optimization:** Efficient database queries with proper indexing
+- **Code splitting:** Automatic code splitting per route
+- **Image optimization:** Next.js Image component with automatic WebP conversion
+- **MongoDB connection pooling:** Reuses database connections across requests
+- **Lazy loading:** Components and routes loaded on demand
+- **Caching headers:** Proper cache control for static assets
 
 ## 🎓 University Project Notes
 
@@ -490,46 +519,119 @@ This system is designed to impress during project defense:
 ```
 Error: connect ECONNREFUSED 127.0.0.1:27017
 ```
-**Solution:** Ensure MongoDB is running locally or check your `MONGODB_URI` in `.env.local`
+**Solution:** 
+- Ensure MongoDB is running locally: `mongod` or start MongoDB service
+- Check your `MONGODB_URI` in `.env.local`
+- For MongoDB Atlas, verify your connection string and network access settings
+- Ensure your IP address is whitelisted in MongoDB Atlas
 
 **JWT Authentication Error:**
 ```
 Error: Invalid token
 ```
-**Solution:** Clear browser cookies and login again. Ensure `JWT_SECRET` is set in `.env.local`
+**Solution:** 
+- Clear browser cookies and login again
+- Ensure `JWT_SECRET` is set in `.env.local`
+- Check that the secret matches between token creation and verification
+- Try logging out and logging back in
 
 **Tour Guide Not Showing:**
-**Solution:** Clear localStorage for the site or open in incognito mode to reset tour state
+**Solution:** 
+- Clear localStorage for the site: Open DevTools → Application → Local Storage → Clear
+- Open in incognito/private mode to reset tour state
+- Check browser console for JavaScript errors
 
 **Courses Not Loading:**
-**Solution:** Run `npm run setup` to seed the database with sample data
+**Solution:** 
+- Run `npm run setup` to seed the database with sample data
+- Check MongoDB connection in browser console
+- Verify API routes are responding: visit `/api/courses` directly
+- Check for errors in terminal where dev server is running
 
 **Build Errors:**
 ```
 Error: Module not found
 ```
-**Solution:** Delete `node_modules` and `.next` folders, then run `npm install` and `npm run dev`
+**Solution:** 
+- Delete `node_modules` and `.next` folders
+- Run `npm install` to reinstall dependencies
+- Clear npm cache: `npm cache clean --force`
+- Ensure you're using Node.js 18 or higher: `node --version`
+
+**TypeScript Errors:**
+```
+Type error: Cannot find module...
+```
+**Solution:**
+- Run `npm install` to ensure all type definitions are installed
+- Delete `tsconfig.tsbuildinfo` and restart the dev server
+- Check that all imports use correct paths
+
+**Styling Not Applied:**
+**Solution:**
+- Ensure Tailwind CSS is properly configured
+- Check that `globals.css` is imported in `app/layout.tsx`
+- Clear `.next` folder and restart dev server
+- Verify PostCSS configuration in `postcss.config.mjs`
+
+**API Routes Returning 404:**
+**Solution:**
+- Ensure file is named `route.ts` (not `route.tsx`)
+- Check that the file exports named functions: `GET`, `POST`, `PUT`, `DELETE`
+- Verify the file is in the correct `app/api/` directory structure
+- Restart the development server
+
+**Database Seeding Fails:**
+**Solution:**
+- Ensure MongoDB is running and accessible
+- Check that `MONGODB_URI` is correct in `.env.local`
+- Verify you have write permissions to the database
+- Try manually connecting to MongoDB using MongoDB Compass or mongosh
 
 ## 🔒 Security Considerations
 
+### Current Security Features
 - **JWT Tokens:** Stored in httpOnly cookies to prevent XSS attacks
-- **Password Hashing:** Uses bcrypt for secure password storage
-- **Input Validation:** All user inputs are validated on both client and server
-- **MongoDB Injection:** Uses Mongoose parameterized queries
+- **Password Hashing:** Uses bcryptjs with salt rounds for secure password storage
+- **Input Validation:** All user inputs validated on both client and server using Zod schemas
+- **MongoDB Injection:** Uses Mongoose parameterized queries to prevent injection attacks
 - **CORS:** Configured for same-origin requests only
-- **Environment Variables:** Sensitive data stored in `.env.local` (not committed)
+- **Environment Variables:** Sensitive data stored in `.env.local` (excluded from version control via `.gitignore`)
+- **Secure Cookies:** httpOnly flag prevents JavaScript access to authentication tokens
 
-**Production Recommendations:**
-- Use HTTPS for all connections
-- Implement rate limiting on API routes
-- Add CSRF protection
-- Enable MongoDB authentication
-- Use strong JWT secrets (32+ characters)
-- Implement session timeout
-- Add audit logging for admin actions
+### Production Security Recommendations
+- **HTTPS:** Use HTTPS for all connections (required for secure cookies)
+- **Rate Limiting:** Implement rate limiting on API routes to prevent brute force attacks
+- **CSRF Protection:** Add CSRF tokens for state-changing operations
+- **MongoDB Authentication:** Enable authentication and use strong credentials
+- **Strong JWT Secrets:** Use cryptographically secure random strings (32+ characters)
+- **Session Timeout:** Implement automatic session expiration
+- **Audit Logging:** Add logging for admin actions and sensitive operations
+- **Content Security Policy:** Add CSP headers to prevent XSS
+- **Helmet.js:** Add security headers for production deployment
+- **Input Sanitization:** Sanitize user inputs to prevent stored XSS
+- **File Upload Validation:** If adding file uploads, validate file types and sizes
+- **Database Backups:** Regular automated backups of MongoDB data
+
+### Security Best Practices for Development
+- Never commit `.env.local` or sensitive credentials
+- Rotate JWT secrets regularly in production
+- Use different credentials for development and production
+- Keep dependencies updated (`npm audit` and `npm update`)
+- Review and test authentication flows regularly
+- Implement proper error handling without exposing sensitive information
+
+---
+
+## 📝 License
+
+This project is developed for academic purposes at the University of Port Harcourt.
 
 ---
 
 **University of Port Harcourt**  
+*Department of Computer Science*  
 *Smart Course Registration Portal*  
 *Developed for Academic Excellence*
+
+**Built with:** Next.js 16 • React 19 • TypeScript • MongoDB • Tailwind CSS • Framer Motion
