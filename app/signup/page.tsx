@@ -22,7 +22,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     name: '', email: '', matricNumber: '',
-    department: '', level: '100', semester: '1', password: '', confirmPassword: '',
+    department: 'Computer Science', level: '100', semester: '1', password: '', confirmPassword: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -157,7 +157,7 @@ export default function SignupPage() {
 
               <motion.button
                 type="submit"
-                disabled={loading || !form.department}
+                disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/25 disabled:opacity-50"

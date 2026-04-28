@@ -149,8 +149,8 @@ export default function DashboardPage() {
                   { label: 'Units', value: totalUnits, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
                   { label: 'Status', value: currentReg?.status || 'None', color: 'text-violet-400', bg: 'bg-violet-500/10' },
                 ].map((item, i) => (
-                  <div key={i} className={`text-center p-4 rounded-xl ${item.bg}`}>
-                    <p className={`text-2xl font-bold capitalize ${item.color}`}>{item.value}</p>
+                  <div key={i} className={`text-center p-3 md:p-4 rounded-xl ${item.bg}`}>
+                    <p className={`text-xl md:text-2xl font-bold capitalize ${item.color} break-words`}>{item.value}</p>
                     <p className="text-xs text-white/40 mt-1">{item.label}</p>
                   </div>
                 ))}
