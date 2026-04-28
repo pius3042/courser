@@ -67,10 +67,10 @@ export default function AdminStudentsPage() {
               <ArrowLeft className="w-4 h-4" /> Back to Dashboard
             </motion.button>
           </Link>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-1">Student Management</h1>
-              <p className="text-white/40">Manage student accounts and information</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">Student Management</h1>
+              <p className="text-white/40 text-sm">Manage student accounts and information</p>
             </div>
             <Link href="/admin/students/new">
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -104,17 +104,17 @@ export default function AdminStudentsPage() {
         {/* Table */}
         <div className="glass-effect rounded-2xl overflow-hidden">
           <div className="p-5 border-b border-white/8">
-            <h2 className="flex items-center gap-2 text-white font-bold">
+            <h2 className="flex items-center gap-2 text-white font-bold text-sm md:text-base">
               <Users className="w-5 h-5 text-white/40" /> Students ({filteredStudents.length})
             </h2>
           </div>
           {filteredStudents.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[800px]">
                 <thead>
                   <tr className="border-b border-white/8">
                     {['Name', 'Matric Number', 'Email', 'Department', 'Level', 'Semester', 'Actions'].map(h => (
-                      <th key={h} className="text-left py-3 px-4 text-xs font-semibold text-white/40 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left py-3 px-2 md:px-4 text-xs font-semibold text-white/40 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -122,30 +122,30 @@ export default function AdminStudentsPage() {
                   {filteredStudents.map((student, i) => (
                     <motion.tr key={student._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.04 }}
                       className="border-b border-white/5 hover:bg-white/3 transition-colors">
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                      <td className="py-4 px-2 md:px-4">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-xs md:text-sm shrink-0">
                             {student.name.charAt(0)}
                           </div>
-                          <span className="font-medium text-white/80">{student.name}</span>
+                          <span className="font-medium text-white/80 text-xs md:text-sm">{student.name}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4 font-mono text-sm text-white/60">{student.matricNumber}</td>
-                      <td className="py-4 px-4 text-sm text-white/50">{student.email}</td>
-                      <td className="py-4 px-4"><Badge variant="default">{student.department}</Badge></td>
-                      <td className="py-4 px-4 text-sm text-white/70 font-semibold">{student.level} Level</td>
-                      <td className="py-4 px-4 text-sm text-white/50">Sem {student.semester}</td>
-                      <td className="py-4 px-4">
-                        <div className="flex gap-2 justify-center">
+                      <td className="py-4 px-2 md:px-4 font-mono text-xs md:text-sm text-white/60">{student.matricNumber}</td>
+                      <td className="py-4 px-2 md:px-4 text-xs md:text-sm text-white/50">{student.email}</td>
+                      <td className="py-4 px-2 md:px-4"><Badge variant="default" className="text-xs">{student.department}</Badge></td>
+                      <td className="py-4 px-2 md:px-4 text-xs md:text-sm text-white/70 font-semibold">{student.level} Level</td>
+                      <td className="py-4 px-2 md:px-4 text-xs md:text-sm text-white/50">Sem {student.semester}</td>
+                      <td className="py-4 px-2 md:px-4">
+                        <div className="flex gap-1 md:gap-2 justify-center">
                           <Link href={`/admin/students/edit/${student._id}`}>
                             <motion.button whileHover={{ scale: 1.1 }}
                               className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-white/40 hover:text-blue-400 hover:border-blue-500/30 transition-colors">
-                              <Edit className="w-4 h-4" />
+                              <Edit className="w-3 h-3 md:w-4 md:h-4" />
                             </motion.button>
                           </Link>
                           <motion.button whileHover={{ scale: 1.1 }} onClick={() => handleDelete(student._id)}
                             className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-white/40 hover:text-red-400 hover:border-red-500/30 transition-colors">
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
                           </motion.button>
                         </div>
                       </td>

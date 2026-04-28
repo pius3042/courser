@@ -97,7 +97,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Heading */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight">
             <span className="bg-linear-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
               Smart Course
             </span>
@@ -107,7 +107,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto leading-relaxed px-4">
             Intelligent course selection, real-time validation, and prerequisite enforcement —
             built to make registration effortless for every student.
           </p>
@@ -118,7 +118,7 @@ export default function LandingPage() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-shadow"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-shadow"
               >
                 Student Login
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -128,7 +128,7 @@ export default function LandingPage() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold border border-white/15 bg-white/5 hover:bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition-all"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-base font-semibold border border-white/15 bg-white/5 hover:bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition-all"
               >
                 Admin Portal
               </motion.button>
@@ -253,17 +253,17 @@ export default function LandingPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to register?
             </h2>
-            <p className="text-white/40 text-lg mb-10">
+            <p className="text-white/40 text-base md:text-lg mb-10 px-4">
               Log in with your student credentials and complete your course registration in minutes.
             </p>
             <Link href="/login">
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-xl text-base font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-shadow"
+                className="inline-flex items-center gap-2 px-8 md:px-10 py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold bg-linear-to-r from-blue-500 to-violet-600 text-white shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-shadow"
               >
                 Get Started
                 <ArrowRight className="w-4 h-4" />
@@ -276,17 +276,17 @@ export default function LandingPage() {
       {/* ── FOOTER ── */}
       <footer className="border-t border-white/8 py-10 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-white/30 text-sm">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col md:flex-row items-center gap-3">
             <div className="p-2 rounded-lg bg-linear-to-br from-blue-500 to-violet-600">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <div>
+            <div className="text-center md:text-left">
               <span className="text-white/60 font-semibold">University of Port Harcourt</span>
-              <span className="mx-2">·</span>
-              Smart Course Registration Portal
+              <span className="mx-2 hidden md:inline">·</span>
+              <span className="block md:inline">Smart Course Registration Portal</span>
             </div>
           </div>
-          <p>© 2026. Developed for Academic Excellence.</p>
+          <p className="text-center md:text-right">© 2026. Developed for Academic Excellence.</p>
         </div>
       </footer>
     </div>

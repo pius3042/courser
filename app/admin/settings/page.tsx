@@ -138,11 +138,15 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-white/70 mb-2">Current Session</label>
-                <Input
-                  value={settings.currentSession}
-                  onChange={e => setSettings({ ...settings, currentSession: e.target.value })}
-                  placeholder="e.g., 2025/2026"
-                />
+                <Select value={settings.currentSession} onValueChange={v => setSettings({ ...settings, currentSession: v })}>
+                  <SelectItem value="2024/2025">2024/2025</SelectItem>
+                  <SelectItem value="2025/2026">2025/2026</SelectItem>
+                  <SelectItem value="2026/2027">2026/2027</SelectItem>
+                  <SelectItem value="2027/2028">2027/2028</SelectItem>
+                  <SelectItem value="2028/2029">2028/2029</SelectItem>
+                  <SelectItem value="2029/2030">2029/2030</SelectItem>
+                  <SelectItem value="2030/2031">2030/2031</SelectItem>
+                </Select>
                 {sessionChanged && (
                   <p className="text-xs text-orange-400 mt-1">⚠️ Changing session will bump all student levels</p>
                 )}

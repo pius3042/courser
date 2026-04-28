@@ -46,20 +46,20 @@ export default function HistoryPage() {
       </div>
 
       <div className="max-w-5xl mx-auto relative z-10">
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <Link href="/dashboard">
             <motion.button whileHover={{ x: -4 }}
-              className="inline-flex items-center gap-2 mb-4 text-white/40 hover:text-white text-sm transition-colors">
+              className="inline-flex items-center gap-2 mb-3 md:mb-4 text-white/40 hover:text-white text-sm transition-colors">
               <ArrowLeft className="w-4 h-4" /> Back to Dashboard
             </motion.button>
           </Link>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30">
-              <Clock className="w-7 h-7 text-blue-400" />
+          <div className="flex items-center gap-2 md:gap-3 mb-2">
+            <div className="p-2 md:p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30">
+              <Clock className="w-6 h-6 md:w-7 md:h-7 text-blue-400" />
             </div>
-            <h1 className="text-4xl font-bold text-white">Registration History</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">Registration History</h1>
           </div>
-          <p className="text-white/40">View all your past course registrations</p>
+          <p className="text-white/40 text-sm">View all your past course registrations</p>
         </div>
 
         <div className="space-y-5">
@@ -67,35 +67,35 @@ export default function HistoryPage() {
             <motion.div key={reg._id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
               <div className="glass-effect rounded-2xl p-6 hover:border-white/15 transition-colors">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-5">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 mb-5">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(reg.status)}
                     <div>
-                      <p className="text-lg font-bold text-white">{reg.session} — Semester {reg.semester}</p>
-                      <p className="text-sm text-white/40">
+                      <p className="text-base md:text-lg font-bold text-white">{reg.session} — Semester {reg.semester}</p>
+                      <p className="text-xs md:text-sm text-white/40">
                         Registered on {new Date(reg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                       </p>
                     </div>
                   </div>
                   <Badge variant={reg.status === 'approved' ? 'success' : reg.status === 'pending' ? 'warning' : 'destructive'}
-                    className="text-sm px-4 py-2 uppercase">
+                    className="text-xs md:text-sm px-3 md:px-4 py-1.5 md:py-2 uppercase self-start md:self-auto">
                     {reg.status}
                   </Badge>
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-3 mb-5">
-                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/15 text-center">
+                <div className="grid grid-cols-3 gap-2 md:gap-3 mb-5">
+                  <div className="p-2 md:p-3 rounded-xl bg-blue-500/10 border border-blue-500/15 text-center">
                     <p className="text-xs text-white/40 mb-1">Total Courses</p>
-                    <p className="text-2xl font-bold text-blue-400">{reg.courses.length}</p>
+                    <p className="text-xl md:text-2xl font-bold text-blue-400">{reg.courses.length}</p>
                   </div>
-                  <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/15 text-center">
+                  <div className="p-2 md:p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/15 text-center">
                     <p className="text-xs text-white/40 mb-1">Total Units</p>
-                    <p className="text-2xl font-bold text-emerald-400">{reg.totalUnits}</p>
+                    <p className="text-xl md:text-2xl font-bold text-emerald-400">{reg.totalUnits}</p>
                   </div>
-                  <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/15 text-center">
+                  <div className="p-2 md:p-3 rounded-xl bg-violet-500/10 border border-violet-500/15 text-center">
                     <p className="text-xs text-white/40 mb-1">Status</p>
-                    <p className="text-lg font-bold text-violet-400 capitalize">{reg.status}</p>
+                    <p className="text-base md:text-lg font-bold text-violet-400 capitalize">{reg.status}</p>
                   </div>
                 </div>
 

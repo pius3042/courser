@@ -188,16 +188,15 @@ export default function RegisterPage() {
         <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-violet-600/10 blur-[120px]" />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-6">
+        <div className="mb-6 md:mb-8">
           <Link href="/dashboard">
             <motion.button whileHover={{ x: -4 }}
-              className="inline-flex items-center gap-2 mb-3 text-white/40 hover:text-white text-sm transition-colors">
+              className="inline-flex items-center gap-2 mb-3 md:mb-4 text-white/40 hover:text-white text-sm transition-colors">
               <ArrowLeft className="w-4 h-4" /> Back to Dashboard
             </motion.button>
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-1">Course Registration</h1>
-          <p className="text-white/40">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">Course Registration</h1>
+          <p className="text-white/40 text-sm">
             {student?.department} · {student?.level} Level · Semester {student?.semester}
           </p>
         </div>
@@ -245,16 +244,18 @@ export default function RegisterPage() {
                 </Card>
 
                 {/* Search + Filter */}
-                <div className="flex gap-3">
+                <div className="flex flex-col md:flex-row gap-3">
                   <div className="flex-1 relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
                     <Input placeholder="Search courses..." value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
                   </div>
-                  {(['all', 'compulsory', 'elective'] as const).map(f => (
-                    <Button key={f} variant={filter === f ? 'default' : 'outline'}
-                      onClick={() => setFilter(f)} className="capitalize">{f}</Button>
-                  ))}
+                  <div className="flex gap-2 md:gap-3">
+                    {(['all', 'compulsory', 'elective'] as const).map(f => (
+                      <Button key={f} variant={filter === f ? 'default' : 'outline'}
+                        onClick={() => setFilter(f)} className="capitalize flex-1 md:flex-none text-sm">{f}</Button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Course Cards */}

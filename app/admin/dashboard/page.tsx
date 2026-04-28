@@ -71,10 +71,10 @@ export default function AdminDashboardPage() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-1">Admin Dashboard</h1>
-            <p className="text-white/40">Manage students, courses, and registrations</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">Admin Dashboard</h1>
+            <p className="text-white/40 text-sm">Manage students, courses, and registrations</p>
           </div>
           <motion.button onClick={handleLogout} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-sm font-medium transition-all">

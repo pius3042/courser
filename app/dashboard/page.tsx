@@ -80,14 +80,14 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-blue-500/30">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-xl md:text-2xl font-bold shadow-lg shadow-blue-500/30 shrink-0">
               {student?.name?.charAt(0) || 'S'}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Welcome back, {student?.name?.split(' ')[0]}!</h1>
-              <p className="text-white/40 text-sm">{student?.matricNumber} · {student?.department} · {student?.level} Level</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">Welcome back, {student?.name?.split(' ')[0]}!</h1>
+              <p className="text-white/40 text-xs md:text-sm">{student?.matricNumber} · {student?.department} · {student?.level} Level</p>
             </div>
           </div>
           <motion.button
@@ -170,15 +170,15 @@ export default function DashboardPage() {
 
             {/* Registered Courses */}
             {currentReg?.courses?.length > 0 && (
-              <div className="glass-effect rounded-2xl p-6">
-                <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-4">
+              <div className="glass-effect rounded-2xl p-5 md:p-6">
+                <h2 className="flex items-center gap-2 text-base md:text-lg font-bold text-white mb-4">
                   <GraduationCap className="w-5 h-5 text-indigo-400" /> Current Registered Courses
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                   {currentReg.courses.map((code: string, i: number) => (
                     <motion.div key={code} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: i * 0.05 }} whileHover={{ scale: 1.05 }}
-                      className="p-3 rounded-xl border border-blue-500/30 bg-blue-500/10 text-center font-bold text-blue-300">
+                      className="p-2 md:p-3 rounded-xl border border-blue-500/30 bg-blue-500/10 text-center font-bold text-blue-300 text-sm md:text-base">
                       {code}
                     </motion.div>
                   ))}

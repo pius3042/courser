@@ -80,10 +80,10 @@ export default function AdminCoursesPage() {
               <ArrowLeft className="w-4 h-4" /> Back to Dashboard
             </motion.button>
           </Link>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-1">Course Management</h1>
-              <p className="text-white/40">Manage course information and settings</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">Course Management</h1>
+              <p className="text-white/40 text-sm">Manage course information and settings</p>
             </div>
             <Link href="/admin/courses/new">
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -111,18 +111,20 @@ export default function AdminCoursesPage() {
         </div>
 
         {/* Search + Filter */}
-        <div className="glass-effect rounded-2xl p-5 mb-6 flex gap-4 flex-wrap">
-          <div className="flex-1 min-w-48 relative">
+        <div className="glass-effect rounded-2xl p-5 mb-6 flex flex-col md:flex-row gap-3 md:gap-4">
+          <div className="flex-1 min-w-0 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
             <Input placeholder="Search by code or title..." value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
           </div>
-          <select value={levelFilter} onChange={e => setLevelFilter(e.target.value)} className={selectClass}>
-            {['All Levels', '100', '200', '300', '400'].map(o => <option key={o} className="bg-[#06091a]">{o}</option>)}
-          </select>
-          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className={selectClass}>
-            {['All Types', 'Required', 'Optional'].map(o => <option key={o} className="bg-[#06091a]">{o}</option>)}
-          </select>
+          <div className="flex gap-2 md:gap-3">
+            <select value={levelFilter} onChange={e => setLevelFilter(e.target.value)} className={selectClass + " flex-1 md:flex-none"}>
+              {['All Levels', '100', '200', '300', '400'].map(o => <option key={o} className="bg-[#06091a]">{o}</option>)}
+            </select>
+            <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className={selectClass + " flex-1 md:flex-none"}>
+              {['All Types', 'Required', 'Optional'].map(o => <option key={o} className="bg-[#06091a]">{o}</option>)}
+            </select>
+          </div>
         </div>
 
         {/* Grid */}

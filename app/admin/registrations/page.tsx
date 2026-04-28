@@ -110,7 +110,7 @@ export default function AdminRegistrationsPage() {
         </div>
 
         {/* Search + Filter */}
-        <div className="glass-effect rounded-2xl p-5 mb-6 flex gap-4">
+        <div className="glass-effect rounded-2xl p-5 mb-6 flex flex-col md:flex-row gap-3 md:gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
             <Input placeholder="Search by name or matric number..." value={searchQuery}
@@ -129,20 +129,20 @@ export default function AdminRegistrationsPage() {
         <div className="space-y-4">
           {filteredRegistrations.map((reg, i) => (
             <motion.div key={reg._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-              <div className="glass-effect rounded-2xl p-6 hover:border-white/15 transition-colors">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-11 h-11 rounded-xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-lg">
+              <div className="glass-effect rounded-2xl p-4 md:p-6 hover:border-white/15 transition-colors">
+                <div className="flex flex-col md:flex-row items-start justify-between gap-4">
+                  <div className="flex-1 w-full">
+                    <div className="flex items-center gap-2 md:gap-3 mb-4">
+                      <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-base md:text-lg shrink-0">
                         {reg.studentId?.name?.charAt(0) || '?'}
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-white">{reg.studentId?.name || 'Unknown Student'}</h3>
-                        <p className="text-sm text-white/40">{reg.studentId?.matricNumber} · {reg.studentId?.department}</p>
+                      <div className="min-w-0">
+                        <h3 className="text-base md:text-lg font-bold text-white truncate">{reg.studentId?.name || 'Unknown Student'}</h3>
+                        <p className="text-xs md:text-sm text-white/40 truncate">{reg.studentId?.matricNumber} · {reg.studentId?.department}</p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-4">
                       {[
                         { label: 'Session', value: reg.session },
                         { label: 'Semester', value: `Semester ${reg.semester}` },
@@ -151,7 +151,7 @@ export default function AdminRegistrationsPage() {
                       ].map(item => (
                         <div key={item.label}>
                           <p className="text-xs text-white/30">{item.label}</p>
-                          <p className="font-semibold text-white/80 text-sm">{item.value}</p>
+                          <p className="font-semibold text-white/80 text-xs md:text-sm">{item.value}</p>
                         </div>
                       ))}
                     </div>
@@ -170,26 +170,26 @@ export default function AdminRegistrationsPage() {
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end gap-3">
-                    <Badge variant={reg.status === 'approved' ? 'success' : reg.status === 'pending' ? 'warning' : 'destructive'}>
+                  <div className="flex md:flex-col items-start md:items-end gap-3 w-full md:w-auto">
+                    <Badge variant={reg.status === 'approved' ? 'success' : reg.status === 'pending' ? 'warning' : 'destructive'} className="text-xs">
                       {reg.status.toUpperCase()}
                     </Badge>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {reg.status === 'pending' && (
                         <>
                           <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleApprove(reg._id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium hover:bg-emerald-500/30 transition-colors">
-                            <CheckCircle className="w-4 h-4" /> Approve
+                            className="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs md:text-sm font-medium hover:bg-emerald-500/30 transition-colors">
+                            <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> <span className="hidden md:inline">Approve</span><span className="md:hidden">✓</span>
                           </motion.button>
                           <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleReject(reg._id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/20 transition-colors">
-                            <XCircle className="w-4 h-4" /> Reject
+                            className="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs md:text-sm font-medium hover:bg-red-500/20 transition-colors">
+                            <XCircle className="w-3 h-3 md:w-4 md:h-4" /> <span className="hidden md:inline">Reject</span><span className="md:hidden">✕</span>
                           </motion.button>
                         </>
                       )}
                       <motion.button whileHover={{ scale: 1.05 }} onClick={() => handleDelete(reg._id)}
                         className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-white/30 hover:text-red-400 hover:border-red-500/30 transition-colors">
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
                       </motion.button>
                     </div>
                   </div>

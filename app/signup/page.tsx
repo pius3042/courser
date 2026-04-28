@@ -110,20 +110,20 @@ export default function SignupPage() {
                 </motion.div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-medium text-white/70 mb-2">Full Name</label>
                   <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="e.g., John Doe" required />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-medium text-white/70 mb-2">Email Address</label>
                   <Input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@uniport.edu.ng" required />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-medium text-white/70 mb-2">Matric Number</label>
                   <Input value={form.matricNumber} onChange={e => setForm({ ...form, matricNumber: e.target.value })} placeholder="e.g., 2024/123456" required />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-medium text-white/70 mb-2">Department</label>
                   <Select value={form.department} onValueChange={v => setForm({ ...form, department: v })} placeholder="Select Department">
                     {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}

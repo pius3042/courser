@@ -6,6 +6,8 @@ export interface ISettings extends Document {
   registrationOpen: boolean;
   allowLateRegistration: boolean;
   maxUnitsPerSemester: number;
+  requirePrerequisiteCheck: boolean;
+  autoApproveRegistrations: boolean;
   updatedAt: Date;
 }
 
@@ -15,6 +17,8 @@ const SettingsSchema = new Schema<ISettings>({
   registrationOpen: { type: Boolean, default: true },
   allowLateRegistration: { type: Boolean, default: false },
   maxUnitsPerSemester: { type: Number, default: 24 },
+  requirePrerequisiteCheck: { type: Boolean, default: true },
+  autoApproveRegistrations: { type: Boolean, default: false },
   updatedAt: { type: Date, default: Date.now },
 });
 
