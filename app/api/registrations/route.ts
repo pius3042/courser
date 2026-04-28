@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Registration from '@/models/Registration';
 import Course from '@/models/Course';
 import Student from '@/models/Student';
+import Settings from '@/models/Settings';
 import { getSession } from '@/lib/auth';
 import { z } from 'zod';
 
@@ -23,6 +24,10 @@ export async function POST(req: NextRequest) {
     
     const body = await req.json();
     const { session: academicSession, semester, courses: selectedCourses } = registrationSchema.parse(body);
+
+    // Fetch system settings
+    const settings = await Settings.findOne();
+    const requirePrerequisiteCheck = settings?.requirePrerequisiteCheck ?? true;
 
     const student = await Student.findById(session.id);
     if (!student) {
@@ -51,21 +56,23 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // Validation: Check prerequisites
-    for (const course of courses) {
-      if (course.prerequisites && course.prerequisites.length > 0) {
-        const missingPrereqs = course.prerequisites.filter(
-          (prereq: string) =>
-            !student.completedCourses.includes(prereq) &&
-            !selectedCourses.includes(prereq)
-        );
-        
-        if (missingPrereqs.length > 0) {
-          return NextResponse.json({
-            error: `Missing prerequisites for ${course.code}`,
-            course: course.code,
-            missingPrerequisites: missingPrereqs,
-          }, { status: 400 });
+    // Validation: Check prerequisites (only if enabled in settings)
+    if (requirePrerequisiteCheck) {
+      for (const course of courses) {
+        if (course.prerequisites && course.prerequisites.length > 0) {
+          const missingPrereqs = course.prerequisites.filter(
+            (prereq: string) =>
+              !student.completedCourses.includes(prereq) &&
+              !selectedCourses.includes(prereq)
+          );
+          
+          if (missingPrereqs.length > 0) {
+            return NextResponse.json({
+              error: `Missing prerequisites for ${course.code}`,
+              course: course.code,
+              missingPrerequisites: missingPrereqs,
+            }, { status: 400 });
+          }
         }
       }
     }

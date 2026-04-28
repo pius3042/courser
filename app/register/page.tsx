@@ -29,6 +29,7 @@ export default function RegisterPage() {
   const [warnings, setWarnings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [requirePrerequisiteCheck, setRequirePrerequisiteCheck] = useState(true);
 
   useEffect(() => {
     fetchSuggestions();
@@ -36,14 +37,21 @@ export default function RegisterPage() {
 
   const fetchSuggestions = async () => {
     try {
-      const [suggestRes, regRes] = await Promise.all([
+      const [suggestRes, regRes, settingsRes] = await Promise.all([
         fetch('/api/courses/suggest'),
         fetch('/api/registrations'),
+        fetch('/api/settings'),
       ]);
       if (!suggestRes.ok) { router.push('/login'); return; }
       const suggestData = await suggestRes.json();
       setCourses(suggestData.suggested || []);
       setStudent(suggestData.student);
+
+      // Fetch prerequisite check setting
+      if (settingsRes.ok) {
+        const settingsData = await settingsRes.json();
+        setRequirePrerequisiteCheck(settingsData.settings?.requirePrerequisiteCheck ?? true);
+      }
 
       // Pre-fill existing registration ONLY if it's for the current semester
       if (regRes.ok) {
@@ -106,18 +114,20 @@ export default function RegisterPage() {
     }
 
     // Client-side prerequisite check — counts selected courses as satisfying prereqs
-    const completedOrSelected = [...(student?.completedCourses || []), ...selectedCodes];
-    for (const course of selectedCourseObjects) {
-      if (course.prerequisites?.length > 0) {
-        const missing = course.prerequisites.filter(
-          (p: string) => !completedOrSelected.includes(p)
-        );
-        if (missing.length > 0) {
-          newWarnings.push({
-            type: 'error',
-            title: `Prerequisite Missing for ${course.code}`,
-            message: `You need to complete: ${missing.join(', ')} first.`,
-          });
+    if (requirePrerequisiteCheck) {
+      const completedOrSelected = [...(student?.completedCourses || []), ...selectedCodes];
+      for (const course of selectedCourseObjects) {
+        if (course.prerequisites?.length > 0) {
+          const missing = course.prerequisites.filter(
+            (p: string) => !completedOrSelected.includes(p)
+          );
+          if (missing.length > 0) {
+            newWarnings.push({
+              type: 'error',
+              title: `Prerequisite Missing for ${course.code}`,
+              message: `You need to complete: ${missing.join(', ')} first.`,
+            });
+          }
         }
       }
     }
