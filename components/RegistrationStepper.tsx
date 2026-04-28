@@ -18,7 +18,7 @@ export default function RegistrationStepper({ steps, currentStep }: Registration
     <div className="w-full max-w-4xl mx-auto">
       <div className="relative flex items-center justify-between">
         {/* Background line */}
-        <div className="absolute top-6 left-0 right-0 h-0.5 bg-gray-200 z-0" />
+        <div className="absolute top-6 left-0 right-0 h-0.5 bg-white/10 z-0" />
         
         {/* Progress line */}
         <div 
@@ -42,10 +42,10 @@ export default function RegistrationStepper({ steps, currentStep }: Registration
               <div className={`
                 flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300
                 ${index < currentStep 
-                  ? 'bg-green-500 border-green-500 text-white shadow-lg' 
+                  ? 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-500/30' 
                   : index === currentStep 
-                  ? 'bg-blue-500 border-blue-500 text-white shadow-lg'
-                  : 'bg-white border-gray-300 text-gray-400'
+                  ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/30'
+                  : 'bg-white/5 border-white/20 text-white/40'
                 }
               `}>
                 {index < currentStep ? (
@@ -58,11 +58,13 @@ export default function RegistrationStepper({ steps, currentStep }: Registration
               {/* Step content */}
               <div className="mt-3 text-center max-w-32">
                 <p className={`text-sm font-semibold transition-colors duration-300 ${
-                  index <= currentStep ? 'text-gray-900' : 'text-gray-500'
+                  index <= currentStep ? 'text-white' : 'text-white/40'
                 }`}>
                   {step.title}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 leading-tight">
+                <p className={`text-xs mt-1 leading-tight transition-colors duration-300 ${
+                  index <= currentStep ? 'text-white/60' : 'text-white/30'
+                }`}>
                   {step.description}
                 </p>
               </div>
